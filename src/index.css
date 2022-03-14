@@ -1,3 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sora:wght@100;200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rampart+One&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: roboto;
+  }
+}
+
+@layer components {
+  .h1 {
+    @apply font-[sora] text-8xl font-light -tracking-[1.5px];
+  }
+  .h2 {
+    @apply font-[sora] text-6xl font-light -tracking-[0.5px];
+  }
+  .h3 {
+    @apply font-[sora] text-5xl;
+  }
+  .h4 {
+    @apply font-[sora] text-4xl tracking-[0.25px];
+  }
+  .h5 {
+    @apply font-[sora] text-2xl;
+  }
+  .h6 {
+    @apply font-[sora] text-xl tracking-[0.15px];
+  }
+  .S1 {
+    @apply font-[sora] tracking-[0.15px];
+  }
+  .S2 {
+    @apply font-[sora] text-sm tracking-[0.1px];
+  }
+  .B1 {
+    @apply font-[roboto] tracking-[0.5px];
+  }
+  .B2 {
+    @apply font-[roboto] text-sm tracking-[0.25px];
+  }
+  .button {
+    @apply font-[roboto] font-medium tracking-[1.25px] uppercase;
+  }
+  .caption {
+    @apply font-[roboto] text-sx tracking-[0.4px];
+  }
+  .overline {
+    @apply font-[roboto] text-xs tracking-[1.5px] uppercase;
+  }
+}
