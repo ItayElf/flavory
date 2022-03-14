@@ -21,8 +21,9 @@ module.exports = {
           900: "#347232",
         },
         error: "#F4511E",
+        gray: "#616161",
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };
