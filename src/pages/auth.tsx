@@ -53,7 +53,10 @@ export function Auth({ signIn }: Props) {
           <p className="h5 !mt-[60px]">
             {signIn ? "Don't have an account? " : "Already have an account? "}
             {
-              <Link to={"#"} className="text-primary-900">
+              <Link
+                to={signIn ? "/signUp" : "/signIn"}
+                className="text-primary-900"
+              >
                 Click Here
               </Link>
             }

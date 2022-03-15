@@ -5,17 +5,29 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Auth } from "./pages/auth";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { apiUrl } from "./constants";
+
+const client = new ApolloClient({
+  uri: apiUrl + "graphql",
+  cache: new InMemoryCache(),
+  headers: {
+    casdasda: "asdasd",
+  },
+});
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/signIn" element={<Auth signIn />} />
-        <Route path="/signUp" element={<Auth signIn={false} />} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <React.StrictMode>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/signIn" element={<Auth signIn />} />
+          <Route path="/signUp" element={<Auth signIn={false} />} />
+        </Routes>
+      </BrowserRouter>
+    </React.StrictMode>
+  </ApolloProvider>,
   document.getElementById("root")
 );
 
