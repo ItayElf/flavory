@@ -47,7 +47,7 @@ export default function useAuth() {
           const res = await client.query({
             query: getCurrentUser(accessToken),
           });
-          if (res.error) {
+          if (res.errors) {
             setAccess(refreshToken);
           }
         } catch (e) {

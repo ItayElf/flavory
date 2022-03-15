@@ -1,19 +1,64 @@
 import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ButtonPrimary } from "../components/buttonPrimary";
 import { TextField } from "../components/textField";
 import { Link } from "react-router-dom";
+import { gql, useApolloClient } from "@apollo/client";
+import globals from "../globals";
 
 interface Props {
   signIn: boolean;
 }
 
+const signInMutation = (email: string, password: string) => gql`
+mutation {
+  login(email: "${email}", password: "${password}") {
+    accessToken
+    refreshToken
+  }
+}
+`;
+
+const signUpMutation = (email: string, password: string, name: string) => gql`
+mutation {
+  register(email: "${email}", password: "${password}", name: "${name}") {
+    accessToken
+    refreshToken
+  }
+}
+`;
+
 export function Auth({ signIn }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const client = useApolloClient();
+  const navigate = useNavigate();
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const mutation = signIn
+      ? signInMutation(email, password)
+      : signUpMutation(email, password, name);
+    try {
+      const res = await client.mutate({
+        mutation: mutation,
+      });
+      if (res.errors) {
+        setError(res.errors[0].message);
+        return;
+      }
+      const { accessToken, refreshToken } = signIn
+        ? res.data.login
+        : res.data.register;
+      localStorage.setItem("refreshToken", refreshToken);
+      globals.accessToken = accessToken;
+      navigate("/"); // TODO: navigate to feed
+    } catch (e: any) {
+      setError((e + "").replace("Error: ", ""));
+      return;
+    }
   };
 
   return (
@@ -34,7 +79,7 @@ export function Auth({ signIn }: Props) {
             />
           )}
           <TextField
-            type="text"
+            type="email"
             label="Email"
             value={email}
             setValue={setEmail}
@@ -47,6 +92,7 @@ export function Auth({ signIn }: Props) {
             setValue={setPassword}
             required
           />
+          {error && <span className="h6 text-error">{error}</span>}
           <ButtonPrimary className="mx-auto">
             {signIn ? "Sign In" : "Sign Up"}
           </ButtonPrimary>
