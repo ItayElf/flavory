@@ -28,7 +28,7 @@ export default function useCurrentUser() {
       try {
         await validateAuth(client);
       } catch (e) {
-        navigate("signIn");
+        navigate("/signIn");
       }
       const res = await client.query({
         query: currentUser(globals.accessToken),

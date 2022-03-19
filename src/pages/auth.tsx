@@ -54,7 +54,7 @@ export function Auth({ signIn }: Props) {
         : res.data.register;
       localStorage.setItem("refreshToken", refreshToken);
       globals.accessToken = accessToken;
-      navigate("/"); // TODO: navigate to feed
+      navigate("/feed");
     } catch (e: any) {
       setError((e + "").replace("Error: ", ""));
       return;

@@ -23,6 +23,11 @@ module.exports = {
         error: "#F4511E",
         gray: "#616161",
       },
+      screens: {
+        sm: "640px",
+        lg: "1024px",
+        xl: "1440px",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],
