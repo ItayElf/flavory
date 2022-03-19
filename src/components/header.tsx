@@ -12,7 +12,7 @@ export function Header({ contentStyle, user }: Props) {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex h-16 w-full justify-center bg-white">
+    <div className="fixed top-0 flex h-16 w-full justify-center bg-white">
       <div
         className={
           "flex h-full flex-row items-center justify-between sm:justify-evenly lg:justify-between" +
