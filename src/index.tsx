@@ -22,8 +22,11 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/signIn" element={<Auth signIn />} />
-          <Route path="/signUp" element={<Auth signIn={false} />} />
+          <Route path="/signIn" element={<Auth signIn key={"signIn"} />} />
+          <Route
+            path="/signUp"
+            element={<Auth signIn={false} key={"signUp"} />}
+          />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

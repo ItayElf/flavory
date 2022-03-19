@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import globals from "../globals";
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, ApolloClient } from "@apollo/client";
 
 const refresh = (token: string) => gql`
   mutation {
@@ -24,37 +24,34 @@ export default function useAuth() {
   const client = useApolloClient();
 
   useEffect(() => {
-    const setAccess = async (refreshToken: string) => {
-      try {
-        const res = await client.mutate({
-          mutation: refresh(refreshToken),
-        });
-        globals.accessToken = res.data.refresh.newToken;
-      } catch (e) {
-        navigate("/signIn");
-      }
-    };
-    async function auth() {
-      const refreshToken = localStorage.getItem("refreshToken") ?? "";
-      if (!refreshToken) {
-        navigate("/signIn");
-      }
-      const accessToken = globals.accessToken;
-      if (!accessToken) {
-        setAccess(refreshToken);
-      } else {
-        try {
-          const res = await client.query({
-            query: getCurrentUser(accessToken),
-          });
-          if (res.errors) {
-            setAccess(refreshToken);
-          }
-        } catch (e) {
-          setAccess(refreshToken);
-        }
-      }
-    }
-    auth();
+    validateAuth(client).catch((e) => navigate("/signIn"));
   }, [client, navigate]);
 }
+
+export const validateAuth = async (client: ApolloClient<object>) => {
+  const refreshToken = localStorage.getItem("refreshToken") ?? "";
+  if (!refreshToken) {
+    throw Error("No refreshToken");
+  }
+  const accessToken = globals.accessToken;
+  if (!accessToken) {
+    const res = await client.mutate({
+      mutation: refresh(refreshToken),
+    });
+    globals.accessToken = res.data.refresh.newToken;
+  } else {
+    try {
+      const res = await client.query({
+        query: getCurrentUser(accessToken),
+      });
+      if (res.errors) {
+        throw Error();
+      }
+    } catch (e) {
+      const res = await client.mutate({
+        mutation: refresh(refreshToken),
+      });
+      globals.accessToken = res.data.refresh.newToken;
+    }
+  }
+};
