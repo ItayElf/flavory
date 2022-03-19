@@ -4,6 +4,8 @@ import { gql, useApolloClient } from "@apollo/client";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { PostPreview } from "../interfaces/post";
 import globals from "../globals";
+import Loading from "../components/loading";
+import PostCard from "../components/postCard";
 
 const pageSize = 20;
 
@@ -16,6 +18,7 @@ const feedQuery = (page: number, token: string) => gql`
             description
             cookingTime
             servings
+            idx
         }
         likes
         cooked
@@ -33,7 +36,7 @@ export function Feed() {
     const res = await client.query({
       query: feedQuery(page, globals.accessToken),
     });
-    setPosts([...(posts ?? []), res.data.feed]);
+    setPosts([...(posts ?? []), ...res.data.feed]);
     setPage(page + 1);
   }, [client, page, posts]);
 
@@ -44,11 +47,31 @@ export function Feed() {
   }, [getNewFeed, user, posts]);
 
   if (!user) {
-    return <></>;
+    return (
+      <>
+        <Loading className="h-full" />
+      </>
+    );
   }
+  console.log(posts);
+
   return (
     <div className="h-full">
       <Header user={user} contentStyle="lg:w-[998px] sm:w-[640px] w-full" />
+      <div className="mt-24 flex w-full flex-row justify-between sm:mx-auto sm:w-[640px] lg:w-[998px]">
+        {posts ? (
+          <>
+            <div className="mb-9 w-full space-y-8 sm:w-[640px]">
+              {posts.map((p) => (
+                <PostCard key={p.idx} post={p} currentUser={user} />
+              ))}
+            </div>
+            <div className="hidden lg:flex"></div>
+          </>
+        ) : (
+          <Loading className="w-full" />
+        )}
+      </div>
     </div>
   );
 }

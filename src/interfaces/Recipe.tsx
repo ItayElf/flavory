@@ -16,4 +16,5 @@ export interface RecipePreview {
   description: string;
   cookingTime?: string;
   servings?: string;
+  idx: number;
 }

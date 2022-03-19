@@ -27,7 +27,7 @@ export function TextField({
         }
         placeholder={label}
         onChange={(e) => setValue(e.target.value)}
-        required
+        required={required}
       />
       <label
         htmlFor={label}
