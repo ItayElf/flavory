@@ -66,7 +66,7 @@ export default function RecipeView() {
         <div className="flex items-center justify-evenly bg-white py-2 sm:shadow sm:shadow-primary-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            enable-background="new 0 0 24 24"
+            enableBackground="new 0 0 24 24"
             viewBox="0 0 24 24"
             className="h-8 w-8 text-primary-600"
           >

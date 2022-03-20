@@ -7,6 +7,7 @@ import globals from "../globals";
 import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
+import { safeQuery } from "../utils/fetchUtils";
 
 const pageSize = 20;
 
@@ -52,9 +53,13 @@ export function Feed() {
       return;
     }
     try {
-      const res = await client.query({
-        query: feedQuery(posts ?? [], globals.accessToken),
-      });
+      //   const res = await client.query({
+      //     query: feedQuery(posts ?? [], globals.accessToken),
+      //   });
+      const res = await safeQuery(
+        client,
+        feedQuery(posts ?? [], globals.accessToken)
+      );
       setPosts([...(posts ?? []), ...res.data.feed]);
     } catch (e) {
       if (e + "" === "Error: No more posts") {
@@ -67,9 +72,10 @@ export function Feed() {
 
   useEffect(() => {
     const getSuggestions = async () => {
-      const res = await client.query({
-        query: suggestedQuery(globals.accessToken),
-      });
+      //   const res = await client.query({
+      //     query: suggestedQuery(globals.accessToken),
+      //   });
+      const res = await safeQuery(client, suggestedQuery(globals.accessToken));
       setSuggestions(res.data.suggestions);
     };
     if (user && posts === null) {

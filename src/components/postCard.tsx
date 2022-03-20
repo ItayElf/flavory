@@ -16,6 +16,7 @@ import { useState } from "react";
 import globals from "../globals";
 import Hashids from "hashids";
 import { timeAsHours } from "../utils/formatUtils";
+import { safeMutation } from "../utils/fetchUtils";
 
 interface Props {
   post: PostPreview;
@@ -60,15 +61,23 @@ export default function PostCard({ post, currentUser }: Props) {
     if (value !== liked) {
       return;
     }
-    await client.mutate({
-      mutation: likeMutation(globals.accessToken, post.idx, !value),
-    });
+    // await client.mutate({
+    //   mutation: likeMutation(globals.accessToken, post.idx, !value),
+    // });
+    await safeMutation(
+      client,
+      likeMutation(globals.accessToken, post.idx, !value)
+    );
     setLiked(!value);
   };
   const toggleCooked = async () => {
-    await client.mutate({
-      mutation: cookedMutation(globals.accessToken, post.idx, !cooked),
-    });
+    // await client.mutate({
+    //   mutation: cookedMutation(globals.accessToken, post.idx, !cooked),
+    // });
+    await safeMutation(
+      client,
+      cookedMutation(globals.accessToken, post.idx, !cooked)
+    );
     setCooked(!cooked);
   };
 
