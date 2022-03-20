@@ -53,11 +53,14 @@ export default function PostCard({ post, currentUser }: Props) {
     (post.cooked.indexOf(currentUser.name) !== -1 ? 1 : 0) +
     (cooked ? 1 : 0);
 
-  const toggleLike = async () => {
+  const toggleLike = async (value: boolean) => {
+    if (value !== liked) {
+      return;
+    }
     await client.mutate({
-      mutation: likeMutation(globals.accessToken, post.idx, !liked),
+      mutation: likeMutation(globals.accessToken, post.idx, !value),
     });
-    setLiked(!liked);
+    setLiked(!value);
   };
   const toggleCooked = async () => {
     await client.mutate({
@@ -80,7 +83,10 @@ export default function PostCard({ post, currentUser }: Props) {
         <MdMoreVert className="h-7 w-7" />
       </div>
       <div className="h-px w-full bg-primary-50"></div>
-      <div className="space-y-4 bg-[#fafafa] px-4 py-4">
+      <div
+        className="space-y-4 bg-[#fafafa] px-4 py-4"
+        onDoubleClick={() => toggleLike(false)}
+      >
         <img
           src={apiUrl + `images/recipes/${post.recipe.idx}`}
           className="aspect-video w-full object-cover"
@@ -116,12 +122,12 @@ export default function PostCard({ post, currentUser }: Props) {
             {liked ? (
               <MdFavorite
                 className="h-11 w-11 text-error"
-                onClick={toggleLike}
+                onClick={() => toggleLike(liked)}
               />
             ) : (
               <MdFavoriteBorder
                 className="h-11 w-11 text-error"
-                onClick={toggleLike}
+                onClick={() => toggleLike(liked)}
               />
             )}
             {cooked ? (
