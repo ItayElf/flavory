@@ -9,14 +9,15 @@ import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
 
 const pageSize = 20;
+
 interface Suggested {
   followedBy: string;
   suggested: string;
 }
 
-const feedQuery = (page: number, token: string) => gql`
+const feedQuery = (posts: PostPreview[], token: string) => gql`
 {
-    feed(items: ${pageSize}, offset:${pageSize * page}, token: "${token}") {
+    feed(items: ${pageSize}, offset:${posts.length}, token: "${token}") {
         poster
         recipe {
             title
@@ -41,17 +42,28 @@ const suggestedQuery = (token: string) => gql`
 export function Feed() {
   const [posts, setPosts] = useState<PostPreview[] | null>(null);
   const [suggestions, setSuggestions] = useState<Suggested[] | null>(null);
-  const [page, setPage] = useState(0);
+  //   const [page, setPage] = useState(0);
+  const [finished, setFinished] = useState(false);
   const client = useApolloClient();
   const user = useCurrentUser();
 
   const getNewFeed = useCallback(async () => {
-    const res = await client.query({
-      query: feedQuery(page, globals.accessToken),
-    });
-    setPosts([...(posts ?? []), ...res.data.feed]);
-    setPage(page + 1);
-  }, [client, page, posts]);
+    if (finished) {
+      return;
+    }
+    try {
+      const res = await client.query({
+        query: feedQuery(posts ?? [], globals.accessToken),
+      });
+      setPosts([...(posts ?? []), ...res.data.feed]);
+    } catch (e) {
+      if (e + "" === "Error: No more posts") {
+        setFinished(true);
+      } else {
+        throw e;
+      }
+    }
+  }, [client, posts, finished]);
 
   useEffect(() => {
     const getSuggestions = async () => {
@@ -65,6 +77,21 @@ export function Feed() {
       getSuggestions();
     }
   }, [getNewFeed, user, posts, client]);
+
+  useEffect(() => {
+    const scrolling_function = async () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 10
+      ) {
+        await getNewFeed();
+        window.removeEventListener("scroll", scrolling_function);
+      }
+    };
+    if (!finished) {
+      window.addEventListener("scroll", scrolling_function);
+    }
+  }, [getNewFeed, finished]);
 
   if (!user) {
     return (
@@ -80,12 +107,12 @@ export function Feed() {
       <div className="mt-24 flex w-full flex-row space-x-8 sm:mx-auto sm:w-[640px] lg:w-[998px]">
         {posts ? (
           <>
-            <div className="mb-9 w-full space-y-8 sm:w-[640px]">
+            <div className="mb-9 w-full snap-y space-y-8 sm:w-[640px] sm:snap-none">
               {posts.map((p) => (
                 <PostCard key={p.idx} post={p} currentUser={user} />
               ))}
             </div>
-            <div className="hidden lg:flex lg:w-full lg:flex-col lg:space-y-4">
+            <div className=" hidden lg:flex lg:w-full lg:flex-col lg:space-y-4">
               <p className="h4">Suggestions:</p>
               {suggestions?.map((u) => (
                 <div key={u.suggested} className="flex justify-between">
@@ -105,6 +132,9 @@ export function Feed() {
                   <button className="s1 text-primary-900">Follow</button>
                 </div>
               ))}
+              <p className="caption !mt-8 text-gray">
+                © 2022 Flavory by Itay Ben Haim
+              </p>
             </div>
           </>
         ) : (

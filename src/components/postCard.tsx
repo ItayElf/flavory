@@ -34,7 +34,7 @@ export default function PostCard({ post, currentUser }: Props) {
       <div className="space-y-4 bg-[#fafafa] px-4 py-4">
         <img
           src={apiUrl + `images/recipes/${post.recipe.idx}`}
-          className="aspect-video w-full"
+          className="aspect-video w-full object-cover"
           onError={(e) =>
             ((e.target as HTMLImageElement).style.display = "none")
           }
