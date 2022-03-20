@@ -13,7 +13,6 @@ import {
 } from "react-icons/md";
 import User from "../interfaces/user";
 import { useState } from "react";
-import globals from "../globals";
 import Hashids from "hashids";
 import { timeAsHours } from "../utils/formatUtils";
 import { safeMutation } from "../utils/fetchUtils";
@@ -64,20 +63,14 @@ export default function PostCard({ post, currentUser }: Props) {
     // await client.mutate({
     //   mutation: likeMutation(globals.accessToken, post.idx, !value),
     // });
-    await safeMutation(
-      client,
-      likeMutation(globals.accessToken, post.idx, !value)
-    );
+    await safeMutation(client, likeMutation, post.idx, !value);
     setLiked(!value);
   };
   const toggleCooked = async () => {
     // await client.mutate({
     //   mutation: cookedMutation(globals.accessToken, post.idx, !cooked),
     // });
-    await safeMutation(
-      client,
-      cookedMutation(globals.accessToken, post.idx, !cooked)
-    );
+    await safeMutation(client, cookedMutation, post.idx, !cooked);
     setCooked(!cooked);
   };
 

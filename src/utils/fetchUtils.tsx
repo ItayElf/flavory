@@ -2,27 +2,33 @@ import { gql, ApolloClient, DocumentNode } from "@apollo/client";
 import globals from "../globals";
 
 const loadAccessToken = async (client: ApolloClient<object>) => {
-  const refresh = gql`
+  const refresh = (token: string) => gql`
     mutation {
-        refresh(refreshToken: "${localStorage.getItem("refreshToken")}") {
-            newToken
-        }
+      refresh(refreshToken: "${token}") {
+        newToken
+      }
     }
-    `;
-  const res = await client.query({ query: refresh });
-  globals.accessToken = res.data.accessToken;
+  `;
+  console.log("before");
+  const refreshToken = localStorage.getItem("refreshToken") ?? "";
+  console.log(refresh(refreshToken));
+  const res = await client.mutate({ mutation: refresh(refreshToken) });
+  console.log("after");
+  globals.accessToken = res.data.newToken;
+  return res.data.newToken;
 };
 
 export const safeQuery = async (
   client: ApolloClient<object>,
-  query: DocumentNode
+  query: (token: string, ...args: any[]) => DocumentNode,
+  ...args: any[]
 ) => {
   try {
-    return client.query({ query });
+    return await client.query({ query: query(globals.accessToken, ...args) });
   } catch (e) {
     if (e + "" === "Error: Signature has expired") {
-      await loadAccessToken(client);
-      return client.query({ query });
+      const token = await loadAccessToken(client);
+      return await client.query({ query: query(token, ...args) });
     } else {
       throw e;
     }
@@ -31,14 +37,17 @@ export const safeQuery = async (
 
 export const safeMutation = async (
   client: ApolloClient<object>,
-  mutation: DocumentNode
+  mutation: (token: string, ...args: any[]) => DocumentNode,
+  ...args: any[]
 ) => {
   try {
-    return client.mutate({ mutation });
+    return await client.mutate({
+      mutation: mutation(globals.accessToken, ...args),
+    });
   } catch (e) {
     if (e + "" === "Error: Signature has expired") {
-      await loadAccessToken(client);
-      return client.mutate({ mutation });
+      const token = await loadAccessToken(client);
+      return await client.mutate({ mutation: mutation(token, ...args) });
     } else {
       throw e;
     }

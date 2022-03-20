@@ -3,7 +3,6 @@ import { Header } from "../components/header";
 import { gql, useApolloClient } from "@apollo/client";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { PostPreview } from "../interfaces/post";
-import globals from "../globals";
 import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
@@ -16,7 +15,7 @@ interface Suggested {
   suggested: string;
 }
 
-const feedQuery = (posts: PostPreview[], token: string) => gql`
+const feedQuery = (token: string, posts: PostPreview[]) => gql`
 {
     feed(items: ${pageSize}, offset:${posts.length}, token: "${token}") {
         poster
@@ -27,8 +26,14 @@ const feedQuery = (posts: PostPreview[], token: string) => gql`
             servings
             idx
         }
+        comments {
+            commenter
+            content
+            timestamp
+        }
         likes
         cooked
+        timestamp
         idx
     }
 }`;
@@ -56,10 +61,7 @@ export function Feed() {
       //   const res = await client.query({
       //     query: feedQuery(posts ?? [], globals.accessToken),
       //   });
-      const res = await safeQuery(
-        client,
-        feedQuery(posts ?? [], globals.accessToken)
-      );
+      const res = await safeQuery(client, feedQuery, posts ?? []);
       setPosts([...(posts ?? []), ...res.data.feed]);
     } catch (e) {
       if (e + "" === "Error: No more posts") {
@@ -75,7 +77,7 @@ export function Feed() {
       //   const res = await client.query({
       //     query: suggestedQuery(globals.accessToken),
       //   });
-      const res = await safeQuery(client, suggestedQuery(globals.accessToken));
+      const res = await safeQuery(client, suggestedQuery);
       setSuggestions(res.data.suggestions);
     };
     if (user && posts === null) {
