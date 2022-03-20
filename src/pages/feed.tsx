@@ -31,6 +31,7 @@ const feedQuery = (posts: PostPreview[], token: string) => gql`
         idx
     }
 }`;
+
 const suggestedQuery = (token: string) => gql`
 {
     suggestions(token: "${token}") {
@@ -42,7 +43,6 @@ const suggestedQuery = (token: string) => gql`
 export function Feed() {
   const [posts, setPosts] = useState<PostPreview[] | null>(null);
   const [suggestions, setSuggestions] = useState<Suggested[] | null>(null);
-  //   const [page, setPage] = useState(0);
   const [finished, setFinished] = useState(false);
   const client = useApolloClient();
   const user = useCurrentUser();

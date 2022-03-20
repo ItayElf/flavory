@@ -1,5 +1,6 @@
 import { apiUrl } from "../constants";
 import { PostPreview } from "../interfaces/post";
+import { gql, useApolloClient } from "@apollo/client";
 import {
   MdMoreVert,
   MdFavoriteBorder,
@@ -10,13 +11,48 @@ import {
   MdOutlineBook,
 } from "react-icons/md";
 import User from "../interfaces/user";
+import { useState } from "react";
+import globals from "../globals";
 
 interface Props {
   post: PostPreview;
   currentUser: User;
 }
 
+const likeMutation = (token: string, postId: number, like: boolean) => gql`
+    mutation {
+        ${like ? "like" : "dislike"}(post: ${postId}, token: "${token}") {
+            success
+        }
+    }
+`;
+
 export default function PostCard({ post, currentUser }: Props) {
+  const client = useApolloClient();
+  const [liked, setLiked] = useState(
+    post.likes.indexOf(currentUser.name) !== -1
+  );
+  const [cooked, setCooked] = useState(
+    post.cooked.indexOf(currentUser.name) !== -1
+  );
+
+  const likes = () =>
+    post.likes.length -
+    (post.likes.indexOf(currentUser.name) !== -1 ? 1 : 0) +
+    (liked ? 1 : 0);
+
+  const cookes = () =>
+    post.cooked.length -
+    (post.cooked.indexOf(currentUser.name) !== -1 ? 1 : 0) +
+    (cooked ? 1 : 0);
+
+  const toggleLike = async () => {
+    await client.mutate({
+      mutation: likeMutation(globals.accessToken, post.idx, !liked),
+    });
+    setLiked(!liked);
+  };
+
   return (
     <div className="w-full shadow-sm shadow-primary-200 sm:w-[640px]">
       <div className="flex flex-row items-center justify-between bg-white py-2 px-4">
@@ -61,26 +97,31 @@ export default function PostCard({ post, currentUser }: Props) {
           View recipe
         </button>
       </div>
-      <div className="bg-white px-10 pt-4 pb-2">
+      <div className="bg-white px-4 pt-4 pb-2">
         <div className="flex justify-between">
           <div className="flex items-center space-x-4">
-            {post.likes.indexOf(currentUser.name) === -1 ? (
-              <MdFavoriteBorder className="h-11 w-11 text-error" />
+            {liked ? (
+              <MdFavorite
+                className="h-11 w-11 text-error"
+                onClick={toggleLike}
+              />
             ) : (
-              <MdFavorite className="h-11 w-11 text-error" />
+              <MdFavoriteBorder
+                className="h-11 w-11 text-error"
+                onClick={toggleLike}
+              />
             )}
-            {post.cooked.indexOf(currentUser.name) === -1 ? (
-              <MdOutlineLunchDining className="h-11 w-11 text-primary-600" />
-            ) : (
+            {cooked ? (
               <MdLunchDining className="h-11 w-11 text-primary-600" />
+            ) : (
+              <MdOutlineLunchDining className="h-11 w-11 text-primary-600" />
             )}
             <MdOutlineComment className="h-11 w-11" />
           </div>
           <MdOutlineBook className="h-11 w-11" />
         </div>
         <p className="mt-2">
-          Liked by {post.likes.length} people and cooked by {post.cooked.length}{" "}
-          people
+          Liked by {likes()} people and cooked by {cookes()} people
         </p>
       </div>
     </div>
