@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { MdSearch, MdOutlineExplore, MdOutlineAddBox } from "react-icons/md";
+import { Link } from "react-router-dom";
 import { apiUrl } from "../constants";
 import User from "../interfaces/user";
 
 interface Props {
-  user: User;
+  user: User | null;
   contentStyle?: string;
 }
 
@@ -31,15 +32,29 @@ export function Header({ contentStyle, user }: Props) {
           />
           <MdSearch className="mr-4 h-7 w-7 text-gray" />
         </div>
-        <div className="flex items-center">
-          <MdOutlineExplore className="mr-6 h-7 w-7" />
-          <MdOutlineAddBox className="mr-6 h-7 w-7" />
-          <img
-            src={apiUrl + `images/users/${user.name}`}
-            className="h-11 w-11 rounded-full ring-2 ring-primary-50"
-            alt={`${user.name}'s profile`}
-          />
-        </div>
+        {user ? (
+          <div className="flex items-center">
+            <MdOutlineExplore className="mr-6 h-7 w-7" />
+            <MdOutlineAddBox className="mr-6 h-7 w-7" />
+            <img
+              src={apiUrl + `images/users/${user.name}`}
+              className="h-11 w-11 rounded-full ring-2 ring-primary-50"
+              alt={`${user.name}'s profile`}
+            />
+          </div>
+        ) : (
+          <div className="flex items-center">
+            <Link to={"/signIn"} className="h6 mr-6 text-primary-900">
+              Sign In
+            </Link>
+            <Link
+              to={"/signUp"}
+              className="h6 mr-6 rounded bg-primary-600 p-2 text-white"
+            >
+              Sign Up
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

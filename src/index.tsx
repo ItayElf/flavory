@@ -8,6 +8,7 @@ import { Auth } from "./pages/auth";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { apiUrl } from "./constants";
 import { Feed } from "./pages/feed";
+import RecipeView from "./pages/recipeView";
 
 const client = new ApolloClient({
   uri: apiUrl + "graphql",
@@ -29,6 +30,7 @@ ReactDOM.render(
             element={<Auth signIn={false} key={"signUp"} />}
           />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/recipe/:id" element={<RecipeView />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

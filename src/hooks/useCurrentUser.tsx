@@ -19,7 +19,7 @@ const currentUser = (token: string) => gql`
 }
 `;
 
-export default function useCurrentUser() {
+export default function useCurrentUser(forceAuth: boolean) {
   const navigate = useNavigate();
   const client = useApolloClient();
   const [user, setUser] = useState<User | null>(null);
@@ -28,7 +28,7 @@ export default function useCurrentUser() {
       try {
         await validateAuth(client);
       } catch (e) {
-        navigate("/signIn");
+        forceAuth && navigate("/signIn");
       }
       const res = await client.query({
         query: currentUser(globals.accessToken),
@@ -43,7 +43,7 @@ export default function useCurrentUser() {
       }
     }
     getCurrentUser();
-  }, [client, navigate]);
+  }, [client, navigate, forceAuth]);
 
   return user;
 }

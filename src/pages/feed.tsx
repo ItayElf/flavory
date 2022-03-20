@@ -45,7 +45,7 @@ export function Feed() {
   const [suggestions, setSuggestions] = useState<Suggested[] | null>(null);
   const [finished, setFinished] = useState(false);
   const client = useApolloClient();
-  const user = useCurrentUser();
+  const user = useCurrentUser(true);
 
   const getNewFeed = useCallback(async () => {
     if (finished) {
@@ -91,6 +91,9 @@ export function Feed() {
     if (!finished) {
       window.addEventListener("scroll", scrolling_function);
     }
+    return () => {
+      window.removeEventListener("scroll", scrolling_function);
+    };
   }, [getNewFeed, finished]);
 
   if (!user) {
@@ -102,7 +105,7 @@ export function Feed() {
   }
 
   return (
-    <div className="h-full">
+    <>
       <Header user={user} contentStyle="lg:w-[998px] sm:w-[640px] w-full" />
       <div className="mt-24 flex w-full flex-row space-x-8 sm:mx-auto sm:w-[640px] lg:w-[998px]">
         {posts ? (
@@ -141,6 +144,6 @@ export function Feed() {
           <Loading className="w-full" />
         )}
       </div>
-    </div>
+    </>
   );
 }

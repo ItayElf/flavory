@@ -1,6 +1,7 @@
 import { apiUrl } from "../constants";
 import { PostPreview } from "../interfaces/post";
 import { gql, useApolloClient } from "@apollo/client";
+import { Link } from "react-router-dom";
 import {
   MdMoreVert,
   MdFavoriteBorder,
@@ -13,6 +14,7 @@ import {
 import User from "../interfaces/user";
 import { useState } from "react";
 import globals from "../globals";
+import Hashids from "hashids";
 
 interface Props {
   post: PostPreview;
@@ -112,9 +114,12 @@ export default function PostCard({ post, currentUser }: Props) {
             )}
           </div>
         )}
-        <button className="h5 w-full text-right text-primary-900">
+        <Link
+          to={`/recipe/${new Hashids().encode(post.idx)}`}
+          className="h5 block w-full text-right text-primary-900"
+        >
           View recipe
-        </button>
+        </Link>
       </div>
       <div className="bg-white px-4 pt-4 pb-2">
         <div className="flex justify-between">

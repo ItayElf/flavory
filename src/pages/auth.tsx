@@ -62,7 +62,7 @@ export function Auth({ signIn }: Props) {
   };
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-screen items-center justify-center">
       <div className="w-100 flex flex-col space-y-9 bg-white px-8 pt-10 pb-24 shadow-lg shadow-primary-200">
         <span className="h1 text-center">Flavory</span>
         <form
