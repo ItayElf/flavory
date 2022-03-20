@@ -26,6 +26,13 @@ const likeMutation = (token: string, postId: number, like: boolean) => gql`
         }
     }
 `;
+const cookedMutation = (token: string, postId: number, cooked: boolean) => gql`
+mutation {
+    ${cooked ? "cooked" : "uncooked"}(post: ${postId}, token: "${token}") {
+        success
+    }
+}
+`;
 
 export default function PostCard({ post, currentUser }: Props) {
   const client = useApolloClient();
@@ -51,6 +58,12 @@ export default function PostCard({ post, currentUser }: Props) {
       mutation: likeMutation(globals.accessToken, post.idx, !liked),
     });
     setLiked(!liked);
+  };
+  const toggleCooked = async () => {
+    await client.mutate({
+      mutation: cookedMutation(globals.accessToken, post.idx, !cooked),
+    });
+    setCooked(!cooked);
   };
 
   return (
@@ -112,9 +125,15 @@ export default function PostCard({ post, currentUser }: Props) {
               />
             )}
             {cooked ? (
-              <MdLunchDining className="h-11 w-11 text-primary-600" />
+              <MdLunchDining
+                className="h-11 w-11 text-primary-600"
+                onClick={toggleCooked}
+              />
             ) : (
-              <MdOutlineLunchDining className="h-11 w-11 text-primary-600" />
+              <MdOutlineLunchDining
+                className="h-11 w-11 text-primary-600"
+                onClick={toggleCooked}
+              />
             )}
             <MdOutlineComment className="h-11 w-11" />
           </div>
