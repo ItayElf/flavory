@@ -15,6 +15,7 @@ import User from "../interfaces/user";
 import { useState } from "react";
 import globals from "../globals";
 import Hashids from "hashids";
+import { timeAsHours } from "../utils/formatUtils";
 
 interface Props {
   post: PostPreview;
@@ -97,18 +98,17 @@ export default function PostCard({ post, currentUser }: Props) {
           }
           alt={post.recipe.title}
         />
-        <p className="h3 w-full text-center">{post.recipe.title}</p>
-        <p className="h6">{post.recipe.description}</p>
+        <p className="h4 sm:h3 w-full text-center">{post.recipe.title}</p>
+        <p className="s1 sm:h6">{post.recipe.description}</p>
         {(post.recipe.cookingTime || post.recipe.servings) && (
           <div className="flex">
             {post.recipe.cookingTime && (
-              <p className="s1 w-1/2 text-gray">
-                Cooking time: {post.recipe.cookingTime}
-                {/* // TODO convert to hours and minutes */}
+              <p className="s2 sm:s1 w-1/2 text-gray">
+                Cooking time: {timeAsHours(post.recipe.cookingTime)}
               </p>
             )}
             {post.recipe.servings && (
-              <p className="s1 w-1/2 text-gray">
+              <p className="s2 sm:s1 w-1/2 text-gray">
                 Servings: {post.recipe.servings}
               </p>
             )}
@@ -116,7 +116,7 @@ export default function PostCard({ post, currentUser }: Props) {
         )}
         <Link
           to={`/recipe/${new Hashids().encode(post.idx)}`}
-          className="h5 block w-full text-right text-primary-900"
+          className="h6 sm:h5 block w-full text-right text-primary-900"
         >
           View recipe
         </Link>

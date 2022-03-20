@@ -16,12 +16,14 @@ export function Header({ contentStyle, user }: Props) {
     <div className="fixed top-0 flex h-16 w-full justify-center bg-white shadow-sm shadow-primary-200">
       <div
         className={
-          "flex h-full flex-row items-center justify-between sm:justify-evenly lg:justify-between" +
+          "flex h-full flex-row items-center justify-between px-2 sm:justify-evenly lg:justify-between" +
           " " +
           contentStyle
         }
       >
-        <span className="h4">Flavory</span>
+        <Link to={"/feed"} className="h4">
+          Flavory
+        </Link>
         <div className="hidden items-center rounded-md bg-primary-50 sm:flex sm:w-72 sm:justify-between lg:w-96">
           <input
             placeholder="Search"

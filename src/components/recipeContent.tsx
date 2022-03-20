@@ -12,7 +12,7 @@ interface Props {
 export default function RecipeContent({ recipe }: Props) {
   return (
     <>
-      <h1 className="h2 w-full text-center">{recipe.title}</h1>
+      <h1 className="h4 sm:h2 w-full text-center">{recipe.title}</h1>
       <div className="mt-2 h-px bg-primary-300"></div>
       <img
         src={apiUrl + `images/recipes/${recipe.idx}`}
@@ -20,23 +20,23 @@ export default function RecipeContent({ recipe }: Props) {
         onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
         alt={recipe.title}
       />
-      <p className="h5 mt-4">{recipe.description}</p>
-      <div className="h5 mt-4 flex w-full justify-center space-x-2 divide-x divide-primary-300 text-gray">
+      <p className="s1 sm:h5 mt-4">{recipe.description}</p>
+      <div className="s1 sm:h5 mt-4 flex w-full justify-center space-x-2 divide-x divide-primary-300 text-gray">
         {recipe.cookingTime && (
-          <div className="flex items-center">
-            <MdTimer className="mr-2 h-8 w-8" />
+          <div className="flex flex-col items-center justify-center sm:flex-row">
+            <MdTimer className="h-8 w-8 sm:mr-2" />
             <p>{timeAsHours(recipe.cookingTime)}</p>
           </div>
         )}
         {recipe.servings && (
-          <div className="flex items-center pl-2">
-            <MdRestaurant className="mr-2 h-8 w-8" />
+          <div className="flex flex-col items-center pl-2 sm:flex-row">
+            <MdRestaurant className="h-8 w-8 sm:mr-2" />
             <p>{recipe.servings}</p>
           </div>
         )}
         {recipe.author && (
-          <div className="flex items-center pl-2">
-            <MdEdit className="mr-2 h-8 w-8" />
+          <div className="flex flex-col items-center pl-2 sm:flex-row">
+            <MdEdit className="h-8 w-8 sm:mr-2" />
             <p>{recipe.author}</p>
           </div>
         )}
