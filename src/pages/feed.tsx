@@ -154,11 +154,7 @@ export function Feed() {
                 © 2022 Flavory by Itay Ben Haim
               </p>
             </div>
-            <PostModal
-              user={user}
-              onClose={() => setModalPost(null)}
-              post={modalPost}
-            />
+            <PostModal onClose={() => setModalPost(null)} post={modalPost} />
           </>
         ) : (
           <Loading className="w-full" />

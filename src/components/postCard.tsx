@@ -81,7 +81,7 @@ export default function PostCard({ post, currentUser, setModalPost }: Props) {
           />
           <div className="ml-4 flex h-full flex-col justify-between">
             <p className="h6">{post.poster}</p>
-            <p className="caption text-gray">{timeSince(post.timestamp)} ago</p>
+            <p className="caption text-gray">{timeSince(post.timestamp)}</p>
           </div>
         </div>
         <MdMoreVert className="h-7 w-7" />

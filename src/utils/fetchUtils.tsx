@@ -1,6 +1,8 @@
 import { gql, ApolloClient, DocumentNode } from "@apollo/client";
 import globals from "../globals";
 
+const escape = (a: string) => a.replace(/"/g, '\\"');
+
 const loadAccessToken = async (client: ApolloClient<object>) => {
   const refresh = (token: string) => gql`
     mutation {
@@ -21,6 +23,7 @@ export const safeQuery = async (
   ...args: any[]
 ) => {
   try {
+    args = args.map((a) => (typeof a === "string" ? escape(a) : a));
     return await client.query({ query: query(globals.accessToken, ...args) });
   } catch (e) {
     if (e + "" === "Error: Signature has expired") {
@@ -38,6 +41,7 @@ export const safeMutation = async (
   ...args: any[]
 ) => {
   try {
+    args = args.map((a) => (typeof a === "string" ? escape(a) : a));
     return await client.mutate({
       mutation: mutation(globals.accessToken, ...args),
     });
