@@ -11,7 +11,7 @@ export const timeAsHours = (minutes: number) => {
 };
 
 export function timeSince(timestamp: number) {
-  const seconds = new Date().getTime() * 0.001 - timestamp;
+  const seconds = Math.max(new Date().getTime() * 0.001 - timestamp, 0);
 
   let interval = seconds / 31536000;
 

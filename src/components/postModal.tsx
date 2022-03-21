@@ -2,7 +2,7 @@ import { PostPreview } from "../interfaces/post";
 import { Dialog } from "@headlessui/react";
 import { MdOutlineComment, MdKeyboardBackspace } from "react-icons/md";
 import { gql, useApolloClient } from "@apollo/client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import Comment from "../interfaces/comment";
 import { apiUrl } from "../constants";
 import { timeSince } from "../utils/formatUtils";
@@ -29,6 +29,7 @@ export default function PostModal({ post, onClose }: Props) {
   const [comment, setComment] = useState("");
   const map = new Map<number, Comment[]>();
   const [sentComments, setSentComments] = useState(map);
+  const focus = useRef(null);
   const client = useApolloClient();
 
   const shownComments = [
@@ -57,8 +58,10 @@ export default function PostModal({ post, onClose }: Props) {
       open={!!post}
       onClose={onClose}
       className="fixed inset-0 h-full w-full overflow-y-auto sm:m-4"
+      initialFocus={focus}
     >
       <Dialog.Overlay className="fixed inset-0 bg-black/75" onClick={onClose} />
+      <button className="hidden" ref={focus}></button>
 
       <div className="relative h-full w-screen overflow-hidden rounded border-2 border-primary-600 bg-white sm:m-auto sm:h-2/3 sm:w-[480px]">
         <div className="flex h-full flex-col">
@@ -74,7 +77,7 @@ export default function PostModal({ post, onClose }: Props) {
               <div className="flex h-full flex-col items-center justify-center">
                 <MdOutlineComment className="h-16 w-16" />
                 <h2 className="h5 text-center">This post has no comments.</h2>
-                <p className="h6 text-gray">
+                <p className="h6 text-center text-gray">
                   Be the first one to comment on this post!
                 </p>
               </div>
