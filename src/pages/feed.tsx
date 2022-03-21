@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { Props, useCallback, useEffect, useState } from "react";
 import { Header } from "../components/header";
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, ApolloClient } from "@apollo/client";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { PostPreview } from "../interfaces/post";
 import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
-import { safeQuery } from "../utils/fetchUtils";
+import { safeMutation, safeQuery } from "../utils/fetchUtils";
 import PostModal from "../components/postModal";
 
 const pageSize = 20;
@@ -133,22 +133,12 @@ export function Feed() {
             <div className=" hidden lg:flex lg:w-full lg:flex-col lg:space-y-4">
               <p className="h4">Suggestions:</p>
               {suggestions?.map((u) => (
-                <div key={u.suggested} className="flex justify-between">
-                  <div className="flex items-center space-x-4">
-                    <img
-                      src={apiUrl + `images/users/${u.suggested}`}
-                      alt={`${u.suggested}'s profile`}
-                      className="h-12 w-12 rounded-full"
-                    />
-                    <div className="flex flex-col">
-                      <p className="s1">{u.suggested}</p>
-                      <p className="caption text-gray">
-                        Followed by {u.followedBy}
-                      </p>
-                    </div>
-                  </div>
-                  <button className="s1 text-primary-900">Follow</button>
-                </div>
+                <SuggestionTile
+                  apiUrl={apiUrl}
+                  u={u}
+                  key={u.suggested}
+                  client={client}
+                />
               ))}
               <p className="caption !mt-8 text-gray">
                 © 2022 Flavory by Itay Ben Haim
@@ -161,5 +151,50 @@ export function Feed() {
         )}
       </div>
     </>
+  );
+}
+
+interface Props2 {
+  apiUrl: string;
+  u: Suggested;
+  client: ApolloClient<object>;
+}
+
+function SuggestionTile({ apiUrl, u, client }: Props2) {
+  const [followed, setfollowed] = useState(false);
+
+  const mutation = (token: string, name: string, follow: boolean) => gql`
+  mutation {
+    ${follow ? "follow" : "unfollow"}(name: "${name}", token: "${token}") {
+      success
+    }
+  }
+  `;
+
+  const onClick = async () => {
+    await safeMutation(client, mutation, u.suggested, !followed);
+    setfollowed(!followed);
+  };
+
+  return (
+    <div className="flex justify-between">
+      <div className="flex items-center space-x-4">
+        <img
+          src={apiUrl + `images/users/${u.suggested}`}
+          alt={`${u.suggested}'s profile`}
+          className="h-12 w-12 rounded-full"
+        />
+        <div className="flex flex-col">
+          <p className="s1">{u.suggested}</p>
+          <p className="caption text-gray">Followed by {u.followedBy}</p>
+        </div>
+      </div>
+      <button
+        className={`s1 ${!followed ? "text-primary-900" : "text-gray"}`}
+        onClick={onClick}
+      >
+        {followed ? "Following" : "Follow"}
+      </button>
+    </div>
   );
 }
