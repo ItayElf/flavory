@@ -9,11 +9,8 @@ const loadAccessToken = async (client: ApolloClient<object>) => {
       }
     }
   `;
-  console.log("before");
   const refreshToken = localStorage.getItem("refreshToken") ?? "";
-  console.log(refresh(refreshToken));
   const res = await client.mutate({ mutation: refresh(refreshToken) });
-  console.log("after");
   globals.accessToken = res.data.newToken;
   return res.data.newToken;
 };

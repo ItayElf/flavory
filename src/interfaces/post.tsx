@@ -14,7 +14,7 @@ export default interface Post {
 export interface PostPreview {
   poster: string;
   recipe: RecipePreview;
-  commemts: Comment[];
+  comments: Comment[];
   likes: string[];
   cooked: string[];
   timestamp: number;

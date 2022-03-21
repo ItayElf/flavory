@@ -7,6 +7,7 @@ import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
 import { safeQuery } from "../utils/fetchUtils";
+import PostModal from "../components/postModal";
 
 const pageSize = 20;
 
@@ -50,6 +51,7 @@ export function Feed() {
   const [posts, setPosts] = useState<PostPreview[] | null>(null);
   const [suggestions, setSuggestions] = useState<Suggested[] | null>(null);
   const [finished, setFinished] = useState(false);
+  const [modalPost, setModalPost] = useState<PostPreview | null>(null);
   const client = useApolloClient();
   const user = useCurrentUser(true);
 
@@ -120,7 +122,12 @@ export function Feed() {
           <>
             <div className="mb-9 w-full snap-y space-y-8 sm:w-[640px] sm:snap-none">
               {posts.map((p) => (
-                <PostCard key={p.idx} post={p} currentUser={user} />
+                <PostCard
+                  key={p.idx}
+                  post={p}
+                  currentUser={user}
+                  setModalPost={(post) => setModalPost(post)}
+                />
               ))}
             </div>
             <div className=" hidden lg:flex lg:w-full lg:flex-col lg:space-y-4">
@@ -147,6 +154,11 @@ export function Feed() {
                 © 2022 Flavory by Itay Ben Haim
               </p>
             </div>
+            <PostModal
+              user={user}
+              onClose={() => setModalPost(null)}
+              post={modalPost}
+            />
           </>
         ) : (
           <Loading className="w-full" />

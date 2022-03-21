@@ -14,12 +14,13 @@ import {
 import User from "../interfaces/user";
 import { useState } from "react";
 import Hashids from "hashids";
-import { timeAsHours } from "../utils/formatUtils";
+import { timeAsHours, timeSince } from "../utils/formatUtils";
 import { safeMutation } from "../utils/fetchUtils";
 
 interface Props {
   post: PostPreview;
   currentUser: User;
+  setModalPost?: (post: PostPreview) => void;
 }
 
 const likeMutation = (token: string, postId: number, like: boolean) => gql`
@@ -37,7 +38,7 @@ mutation {
 }
 `;
 
-export default function PostCard({ post, currentUser }: Props) {
+export default function PostCard({ post, currentUser, setModalPost }: Props) {
   const client = useApolloClient();
   const [liked, setLiked] = useState(
     post.likes.indexOf(currentUser.name) !== -1
@@ -45,6 +46,7 @@ export default function PostCard({ post, currentUser }: Props) {
   const [cooked, setCooked] = useState(
     post.cooked.indexOf(currentUser.name) !== -1
   );
+  const func = setModalPost ? setModalPost : (post: PostPreview) => {};
 
   const likes = () =>
     post.likes.length -
@@ -60,16 +62,10 @@ export default function PostCard({ post, currentUser }: Props) {
     if (value !== liked) {
       return;
     }
-    // await client.mutate({
-    //   mutation: likeMutation(globals.accessToken, post.idx, !value),
-    // });
     await safeMutation(client, likeMutation, post.idx, !value);
     setLiked(!value);
   };
   const toggleCooked = async () => {
-    // await client.mutate({
-    //   mutation: cookedMutation(globals.accessToken, post.idx, !cooked),
-    // });
     await safeMutation(client, cookedMutation, post.idx, !cooked);
     setCooked(!cooked);
   };
@@ -83,7 +79,10 @@ export default function PostCard({ post, currentUser }: Props) {
             className={"h-14 w-14 rounded-full ring-2 ring-primary-50"}
             alt={`${post.poster}'s profile`}
           />
-          <span className="h6 ml-4">{post.poster}</span>
+          <div className="ml-4 flex h-full flex-col justify-between">
+            <p className="h6">{post.poster}</p>
+            <p className="caption text-gray">{timeSince(post.timestamp)} ago</p>
+          </div>
         </div>
         <MdMoreVert className="h-7 w-7" />
       </div>
@@ -116,12 +115,11 @@ export default function PostCard({ post, currentUser }: Props) {
             )}
           </div>
         )}
-        <Link
-          to={`/recipe/${new Hashids().encode(post.idx)}`}
-          className="h6 sm:h5 block w-full text-right text-primary-900"
-        >
-          View recipe
-        </Link>
+        <div className="h6 sm:h5 w-full text-right text-primary-900">
+          <Link to={`/recipe/${new Hashids().encode(post.idx)}`}>
+            View recipe
+          </Link>
+        </div>
       </div>
       <div className="bg-white px-4 pt-4 pb-2">
         <div className="flex justify-between">
@@ -139,16 +137,19 @@ export default function PostCard({ post, currentUser }: Props) {
             )}
             {cooked ? (
               <MdLunchDining
-                className="h-11 w-11 text-primary-600"
+                className="h-11 w-11 cursor-pointer text-primary-600"
                 onClick={toggleCooked}
               />
             ) : (
               <MdOutlineLunchDining
-                className="h-11 w-11 text-primary-600"
+                className="h-11 w-11 cursor-pointer text-primary-600"
                 onClick={toggleCooked}
               />
             )}
-            <MdOutlineComment className="h-11 w-11" />
+            <MdOutlineComment
+              className="h-11 w-11 cursor-pointer"
+              onClick={() => func(post)}
+            />
           </div>
           <MdOutlineBook className="h-11 w-11" />
         </div>
