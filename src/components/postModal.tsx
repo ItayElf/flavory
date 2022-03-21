@@ -82,7 +82,9 @@ export default function PostModal({ post, onClose }: Props) {
                 </p>
               </div>
             ) : (
-              shownComments.map((c, i) => <CommentTile c={c} key={i} />)
+              shownComments.map((c, i) => (
+                <CommentTile c={c} post={post!} key={i} />
+              ))
             )}
           </div>
           <form
@@ -104,7 +106,7 @@ export default function PostModal({ post, onClose }: Props) {
   );
 }
 
-const CommentTile = ({ c }: { c: Comment }) => {
+const CommentTile = ({ c, post }: { c: Comment; post: PostPreview }) => {
   return (
     <>
       <div className="flex items-start space-x-4">
@@ -114,7 +116,15 @@ const CommentTile = ({ c }: { c: Comment }) => {
           alt={`${c.commenter}'s profile`}
         />
         <div className="space-y-1">
-          <span className="s1 font-semibold">{c.commenter}</span> {c.content}
+          <span
+            className={`s1 font-semibold ${
+              post.poster === c.commenter ? "text-primary-900" : "text-black"
+            }`}
+          >
+            {post.poster === c.commenter && "⭐"}
+            {c.commenter}
+          </span>{" "}
+          {c.content}
           <p className="caption text-gray">{timeSince(c.timestamp)}</p>
         </div>
       </div>
