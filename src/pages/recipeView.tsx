@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Hashids from "hashids";
 import Recipe from "../interfaces/Recipe";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import {
   MdOutlineBook,
   MdEdit,
 } from "react-icons/md";
+import { NotFound } from "../components/notFound";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -36,8 +37,9 @@ const recipeQuery = (idx: number) => gql`
 export default function RecipeView() {
   const [recipe, setRecipe] = useState<Recipe | undefined | null>(null);
   const client = useApolloClient();
+  const navigate = useNavigate();
   const { id: encoded } = useParams();
-  const id = new Hashids().decode(encoded ?? "")[0] as number;
+  const id = (new Hashids().decode(encoded ?? "")[0] as number) ?? -1;
   const user = useCurrentUser(false);
   const owner = user ? user.posts.indexOf(id) !== -1 : false;
 
@@ -56,19 +58,18 @@ export default function RecipeView() {
   if (recipe === null) {
     return <Loading className="h-screen w-screen" />;
   } else if (recipe === undefined) {
-    return <></>;
-    //   not found
+    return <NotFound className="h-screen" />;
   }
   return (
     <>
       <Header user={user} contentStyle="w-full sm:w-[858px]" />
       <div className="mt-24 w-full sm:mx-auto sm:w-[856px]">
-        <div className="flex items-center justify-evenly bg-white py-2 sm:shadow sm:shadow-primary-200">
+        <div className="flex items-center justify-evenly bg-white py-2 sm:shadow sm:shadow-primary-200 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             enableBackground="new 0 0 24 24"
             viewBox="0 0 24 24"
-            className="h-8 w-8 text-primary-600"
+            className="h-8 w-8 cursor-pointer text-primary-600"
           >
             <g>
               <path
@@ -77,11 +78,18 @@ export default function RecipeView() {
               />
             </g>
           </svg>
-          <MdSyncAlt className="h-8 w-8 text-primary-600" />
-          <MdShare className="h-8 w-8 text-primary-600" />
-          <MdPrint className="h-8 w-8 text-primary-600" />
-          <MdOutlineBook className="h-8 w-8 text-primary-600" />
-          {owner && <MdEdit className="h-8 w-8 text-primary-600" />}
+          <MdSyncAlt className="h-8 w-8 cursor-pointer text-primary-600" />
+          <MdShare className="h-8 w-8 cursor-pointer text-primary-600" />
+          <MdPrint className="h-8 w-8 cursor-pointer text-primary-600" />
+          <MdOutlineBook className="h-8 w-8 cursor-pointer text-primary-600" />
+          {owner && (
+            <MdEdit
+              className="h-8 w-8 cursor-pointer text-primary-600"
+              onClick={() =>
+                navigate(`/recipe/edit/${new Hashids().encode(id)}`)
+              }
+            />
+          )}
         </div>
         <main className="bg-white p-10 shadow shadow-primary-200 sm:my-9">
           <RecipeContent recipe={recipe} />

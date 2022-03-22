@@ -9,10 +9,12 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { apiUrl } from "./constants";
 import { Feed } from "./pages/feed";
 import RecipeView from "./pages/recipeView";
+import { RecipeEdit } from "./pages/recipeEdit";
+import { NotFound } from "./components/notFound";
 
 const client = new ApolloClient({
   uri: apiUrl + "graphql",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({ addTypename: false }),
   headers: {
     casdasda: "asdasd",
   },
@@ -31,6 +33,8 @@ ReactDOM.render(
           />
           <Route path="/feed" element={<Feed />} />
           <Route path="/recipe/:id" element={<RecipeView />} />
+          <Route path="/recipe/edit/:id" element={<RecipeEdit />} />
+          <Route path="*" element={<NotFound className="h-screen" />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

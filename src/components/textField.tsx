@@ -2,6 +2,7 @@ interface Props {
   type: string;
   label: string;
   className?: string;
+  wrapperClassName?: string;
   required?: boolean;
   value: string;
   setValue: (value: string) => void;
@@ -11,12 +12,13 @@ export function TextField({
   type,
   label,
   className,
+  wrapperClassName,
   value,
   setValue,
   required,
 }: Props) {
   return (
-    <div className="relative flex flex-col">
+    <div className={"relative flex flex-col " + wrapperClassName}>
       <input
         id={label}
         type={type}

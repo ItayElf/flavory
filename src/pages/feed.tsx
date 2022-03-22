@@ -1,4 +1,4 @@
-import { Props, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { gql, useApolloClient, ApolloClient } from "@apollo/client";
 import useCurrentUser from "../hooks/useCurrentUser";

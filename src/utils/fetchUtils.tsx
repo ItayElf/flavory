@@ -1,7 +1,7 @@
 import { gql, ApolloClient, DocumentNode } from "@apollo/client";
 import globals from "../globals";
 
-const escape = (a: string) => a.replace(/"/g, '\\"');
+export const escape = (a: string) => a.replace(/"/g, '\\"');
 
 const loadAccessToken = async (client: ApolloClient<object>) => {
   const refresh = (token: string) => gql`
