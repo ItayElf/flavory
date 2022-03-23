@@ -43,7 +43,7 @@ mutation {
         ${image !== null ? 'image: "' + escape(image) + '"' : ""}
         title: "${escape(r.title)}" ) {
         recipe {
-            title
+            idx
         }
     }
 }

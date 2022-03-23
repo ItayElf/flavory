@@ -45,6 +45,7 @@ export default function RecipeView() {
 
   useEffect(() => {
     const getRecipe = async () => {
+      console.log("here");
       try {
         const res = await client.query({ query: recipeQuery(id) });
         setRecipe(res.data.recipe);

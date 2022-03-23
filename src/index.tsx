@@ -18,6 +18,10 @@ const client = new ApolloClient({
   headers: {
     casdasda: "asdasd",
   },
+  defaultOptions: {
+    query: { fetchPolicy: "no-cache" },
+    mutate: { fetchPolicy: "no-cache" },
+  },
 });
 
 ReactDOM.render(
