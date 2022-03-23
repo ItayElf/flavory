@@ -7,17 +7,29 @@ import { timeAsHours } from "../utils/formatUtils";
 
 interface Props {
   recipe: Recipe;
+  image?: string | null;
 }
 
-export default function RecipeContent({ recipe }: Props) {
+export default function RecipeContent({ recipe, image }: Props) {
+  const imageSrc = () => {
+    if (image === null) {
+      return "";
+    } else if (image) {
+      return image;
+    } else {
+      return apiUrl + `images/recipes/${recipe.idx}`;
+    }
+  };
+
   return (
     <>
       <h1 className="h4 sm:h2 w-full text-center">{recipe.title}</h1>
       <div className="mt-2 h-px bg-primary-300"></div>
       <img
-        src={apiUrl + `images/recipes/${recipe.idx}`}
+        src={imageSrc()}
         className="mt-6 aspect-video w-full object-cover"
         onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
+        onLoad={(e) => ((e.target as HTMLImageElement).style.display = "")}
         alt={recipe.title}
       />
       <p className="s1 sm:h5 mt-4">{recipe.description}</p>

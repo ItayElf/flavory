@@ -10,7 +10,6 @@ import { Header } from "../components/header";
 import { RecipeEditor } from "../components/recipeEditor";
 import { safeMutation } from "../utils/fetchUtils";
 import { escape } from "../utils/fetchUtils";
-import globals from "../globals";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -30,24 +29,24 @@ const recipeQuery = (idx: number) => gql`
     }
 }`;
 
-const editRecipe = (token: string, r: Recipe, image: string) => gql`
-    mutation {
-        updateRecipe(
-            token: "${escape(token)}", 
-            author: "${escape(r.author)}", 
-            cookingTime: ${r.cookingTime ?? "0"}, 
-            description: "${escape(r.description)}", 
-            idx: ${r.idx}, 
-            ingredients: "${escape(JSON.stringify(r.ingredients))}", 
-            servings: ${r.servings ? '"' + escape(r.servings) + '"' : '""'}, 
-            steps: "${escape(JSON.stringify(r.steps))}", 
-            title: "${escape(r.title)}", 
-            image: "${escape(image)}") {
-            recipe {
-                title
-            }
+const editRecipe = (token: string, r: Recipe, image: string | null) => gql`
+mutation {
+    updateRecipe(
+        token: "${escape(token)}", 
+        author: "${escape(r.author)}", 
+        cookingTime: ${r.cookingTime ?? "0"}, 
+        description: "${escape(r.description)}", 
+        idx: ${r.idx}, 
+        ingredients: "${escape(JSON.stringify(r.ingredients))}", 
+        servings: ${r.servings ? '"' + escape(r.servings) + '"' : '""'}, 
+        steps: "${escape(JSON.stringify(r.steps))}", 
+        ${image !== null ? 'image: "' + escape(image) + '"' : ""}
+        title: "${escape(r.title)}" ) {
+        recipe {
+            title
         }
     }
+}
 `;
 
 export function RecipeEdit() {
@@ -71,8 +70,9 @@ export function RecipeEdit() {
     getRecipe();
   }, [client, id]);
 
-  const save = async (recipe: Recipe, image: string) => {
+  const save = async (recipe: Recipe, image: string | null) => {
     await safeMutation(client, editRecipe, recipe, image);
+    navigate(`/recipe/${encoded}`);
   };
 
   if (recipe === null || !user) {

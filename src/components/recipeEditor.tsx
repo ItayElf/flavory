@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { apiUrl } from "../constants";
 import Recipe from "../interfaces/Recipe";
+import { getBase64FromUrl } from "../utils/fetchUtils";
+import { blobToBase64 } from "../utils/formatUtils";
 import { ButtonPrimary } from "./buttonPrimary";
 import { ButtonSecondary } from "./buttonSecondary";
 import RecipeContent from "./recipeContent";
@@ -7,7 +10,7 @@ import { TextField } from "./textField";
 
 interface Props {
   recipe?: Recipe;
-  onSave: (recipe: Recipe, image: string) => void;
+  onSave: (recipe: Recipe, image: string | null) => void;
   onDiscard: () => void;
 }
 
@@ -21,7 +24,17 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   const m = Math.floor(time % 60);
   const [hours, setHours] = useState(h === 0 ? "" : h + "");
   const [minutes, setMinutes] = useState(m === 0 ? "" : m + "");
+  const [image, setImage] = useState<string | undefined | null>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
   const isSm = window.innerWidth <= 640;
+
+  useEffect(() => {
+    if (recipe) {
+      getBase64FromUrl(apiUrl + `images/recipes/${recipe.idx}`).then((v) => {
+        setImage(v);
+      });
+    }
+  }, [recipe]);
 
   const getRecipe = () => {
     let h = parseInt(hours) * 60;
@@ -39,6 +52,35 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
     } as Recipe;
   };
 
+  const getImage = () => {
+    if (image) {
+      return image.split(",")[1];
+    } else if (image === null) {
+      return image;
+    } else {
+      return "";
+    }
+  };
+
+  const handleImage = () => {
+    if (fileInput.current === null) {
+      return;
+    } else if (image) {
+      setImage(null);
+    } else {
+      fileInput.current.click();
+    }
+  };
+
+  const changeImage = async () => {
+    if (fileInput.current === null || fileInput.current.files === null) {
+      return;
+    }
+    const text = fileInput.current.files[0];
+    const fileBase64 = await blobToBase64(text);
+    setImage(fileBase64 + "");
+  };
+
   return (
     <>
       <div className="fixed top-16 hidden h-full w-[340px] flex-1 flex-col space-y-6 overflow-auto bg-white p-6 shadow shadow-primary-200 sm:flex lg:w-[457px]">
@@ -49,7 +91,22 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
           setValue={setTitle}
           label="Title"
         />
-        <ButtonSecondary className="h5">Remove Image</ButtonSecondary>
+        {image ? (
+          <ButtonSecondary className="h5" onClick={handleImage}>
+            Remove Image
+          </ButtonSecondary>
+        ) : (
+          <ButtonPrimary className="h5" onClick={handleImage}>
+            Add Image
+          </ButtonPrimary>
+        )}
+        <input
+          type="file"
+          className="hidden"
+          ref={fileInput}
+          accept="image/*"
+          onChange={changeImage}
+        />
         <TextField
           type="text"
           value={description}
@@ -92,7 +149,7 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
           </ButtonSecondary>
           <ButtonPrimary
             className="h5 ml-3 w-1/2"
-            onClick={() => onSave(getRecipe(), "")}
+            onClick={() => onSave(getRecipe(), getImage())}
           >
             Save
           </ButtonPrimary>
@@ -102,7 +159,7 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
         <div className="hidden w-[340px] sm:flex lg:w-[457px]"></div>
         <div className="ls:mt-0 mt-8 flex-1 sm:-mt-9">
           <div className="bg-white p-10 shadow shadow-primary-200 sm:my-9 sm:mx-auto sm:w-full sm:max-w-[856px]">
-            <RecipeContent recipe={getRecipe()} />
+            <RecipeContent recipe={getRecipe()} image={image} />
           </div>
         </div>
       </div>
