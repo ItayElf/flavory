@@ -9,6 +9,7 @@ import RecipeContent from "./recipeContent";
 import { TextField } from "./textField";
 import { Transition } from "@headlessui/react";
 import { MdMenu, MdOutlineClose, MdDone } from "react-icons/md";
+import { IngredientsModal } from "./ingredientsModal";
 
 interface Props {
   recipe?: Recipe;
@@ -26,6 +27,8 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   const m = Math.floor(time % 60);
   const [hours, setHours] = useState(h === 0 ? "" : h + "");
   const [minutes, setMinutes] = useState(m === 0 ? "" : m + "");
+  const [ingredients, setIngredients] = useState(recipe?.ingredients ?? []);
+  const [ingModalOpen, setIngModalOpen] = useState(false);
   const [image, setImage] = useState<string | undefined | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -160,7 +163,9 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
             setValue={setAuthor}
             label="Author"
           />
-          <ButtonSecondary className="h5">Edit Ingredients</ButtonSecondary>
+          <ButtonSecondary className="h5" onClick={() => setIngModalOpen(true)}>
+            Edit Ingredients
+          </ButtonSecondary>
           <ButtonSecondary className="h5">Edit Steps</ButtonSecondary>
           <div className="!mb-16 flex w-full sm:!mt-32">
             <ButtonSecondary className="h5 mr-3 w-1/2" onClick={onDiscard}>
@@ -199,6 +204,14 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
           </div>
         </div>
       </div>
+      <IngredientsModal
+        ingredients={ingredients}
+        isOpen={ingModalOpen}
+        onClose={(ings) => {
+          setIngredients(ings);
+          setIngModalOpen(false);
+        }}
+      />
     </>
   );
 }

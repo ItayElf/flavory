@@ -47,7 +47,10 @@ export default function RecipeView() {
     const getRecipe = async () => {
       console.log("here");
       try {
-        const res = await client.query({ query: recipeQuery(id) });
+        const res = await client.query({
+          query: recipeQuery(id),
+          fetchPolicy: "no-cache",
+        });
         setRecipe(res.data.recipe);
       } catch (e) {
         setRecipe(undefined);

@@ -6,6 +6,8 @@ interface Props {
   required?: boolean;
   value: string;
   setValue: (value: string) => void;
+  options?: string[];
+  id?: string;
 }
 
 export function TextField({
@@ -16,11 +18,13 @@ export function TextField({
   value,
   setValue,
   required,
+  options,
+  id,
 }: Props) {
   return (
     <div className={"relative flex flex-col " + wrapperClassName}>
       <input
-        id={label}
+        id={id ?? label}
         type={type}
         value={value}
         className={
@@ -30,13 +34,23 @@ export function TextField({
         placeholder={label}
         onChange={(e) => setValue(e.target.value)}
         required={required}
+        list={`${id ?? label} list`}
       />
       <label
-        htmlFor={label}
+        htmlFor={id ?? label}
         className="s1 peer-placeholder-shown:h5 absolute -top-3.5 left-3 text-black peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray"
       >
         {label}
       </label>
+      {options && (
+        <datalist id={`${id ?? label} list`}>
+          {options.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </datalist>
+      )}
     </div>
   );
 }

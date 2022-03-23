@@ -15,13 +15,10 @@ import { NotFound } from "./components/notFound";
 const client = new ApolloClient({
   uri: apiUrl + "graphql",
   cache: new InMemoryCache({ addTypename: false }),
-  headers: {
-    casdasda: "asdasd",
-  },
-  defaultOptions: {
-    query: { fetchPolicy: "no-cache" },
-    mutate: { fetchPolicy: "no-cache" },
-  },
+  // defaultOptions: {
+  //   query: { fetchPolicy: "no-cache" },
+  //   mutate: { fetchPolicy: "no-cache" },
+  // },
 });
 
 ReactDOM.render(
