@@ -56,7 +56,7 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
       steps: recipe?.steps ?? [],
       cookingTime,
       servings,
-      ingredients: recipe?.ingredients ?? [],
+      ingredients: ingredients,
     } as Recipe;
   };
 

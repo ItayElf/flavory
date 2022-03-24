@@ -63,6 +63,11 @@ export function IngredientsModal({
                   onDelete={(ing) =>
                     setIngredients(ingredients.filter((i) => i !== ing))
                   }
+                  onChange={(ing, idx) =>
+                    setIngredients(
+                      ingredients.map((i, id) => (id === idx ? ing : i))
+                    )
+                  }
                 />
               ))}
               <ButtonPrimary
@@ -88,9 +93,10 @@ interface Props2 {
   ing: Ingredient;
   idx: number;
   onDelete: (ing: Ingredient) => void;
+  onChange: (ing: Ingredient, idx: number) => void;
 }
 
-const IngTile = ({ ing, idx, onDelete }: Props2) => {
+const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
   const [quantity, setQuantity] = useState(ing.quantity + "");
   const [units, setUnits] = useState(ing.units ? ing.units : "");
   const [name, setName] = useState(ing.name);
@@ -113,7 +119,10 @@ const IngTile = ({ ing, idx, onDelete }: Props2) => {
         <TextField
           type="number"
           value={quantity}
-          setValue={setQuantity}
+          setValue={(v) => {
+            setQuantity(v);
+            onChange({ name, quantity: parseInt(v), units }, idx - 1);
+          }}
           label="Quantity"
           className="h-full"
           id={ing.name + ing.quantity + ing.units + 1}
@@ -121,7 +130,10 @@ const IngTile = ({ ing, idx, onDelete }: Props2) => {
         <TextField
           type="text"
           value={units}
-          setValue={setUnits}
+          setValue={(v) => {
+            setUnits(v);
+            onChange({ name, quantity: parseInt(quantity), units: v }, idx - 1);
+          }}
           label="units"
           options={filtered}
           className="w-full"
@@ -131,7 +143,10 @@ const IngTile = ({ ing, idx, onDelete }: Props2) => {
           className="w-full"
           type="text"
           value={name}
-          setValue={setName}
+          setValue={(v) => {
+            setName(v);
+            onChange({ name: v, quantity: parseInt(quantity), units }, idx - 1);
+          }}
           label="name"
           id={ing.name + ing.quantity + ing.units + 3}
         />
