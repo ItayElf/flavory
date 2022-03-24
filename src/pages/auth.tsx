@@ -28,7 +28,7 @@ mutation {
 }
 `;
 
-export function Auth({ signIn }: Props) {
+export default function Auth({ signIn }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

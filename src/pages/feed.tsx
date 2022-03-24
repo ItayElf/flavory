@@ -47,7 +47,7 @@ const suggestedQuery = (token: string) => gql`
     }
 }`;
 
-export function Feed() {
+export default function Feed() {
   const [posts, setPosts] = useState<PostPreview[] | null>(null);
   const [suggestions, setSuggestions] = useState<Suggested[] | null>(null);
   const [finished, setFinished] = useState(false);

@@ -18,7 +18,7 @@ interface Props {
   onDiscard: () => void;
 }
 
-export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
+export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   const [title, setTitle] = useState(recipe?.title ?? "");
   const [description, setDescription] = useState(recipe?.description ?? "");
   const [servings, setServings] = useState(recipe?.servings ?? "");

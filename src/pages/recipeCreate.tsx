@@ -2,9 +2,12 @@ import { useNavigate } from "react-router-dom";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { gql, useApolloClient } from "@apollo/client";
 import { Header } from "../components/header";
-import { RecipeEditor } from "../components/recipeEditor";
 import Recipe from "../interfaces/Recipe";
 import { escape, safeMutation } from "../utils/fetchUtils";
+import React, { Suspense } from "react";
+import Loading from "../components/loading";
+
+const RecipeEditor = React.lazy(() => import("../components/recipeEditor"));
 
 const makePost = (token: string, r: Recipe, image: string | null) => gql`
 mutation {
@@ -27,7 +30,7 @@ mutation {
 }
 `;
 
-export function RecipeCreate() {
+export default function RecipeCreate() {
   const user = useCurrentUser(true);
   const client = useApolloClient();
   const navigate = useNavigate();
@@ -52,7 +55,9 @@ export function RecipeCreate() {
     <>
       <Header user={user} contentStyle="w-full" />
       <main className="mt-16">
-        <RecipeEditor onDiscard={() => navigate(-1)} onSave={save} />
+        <Suspense fallback={<Loading />}>
+          <RecipeEditor onDiscard={() => navigate(-1)} onSave={save} />
+        </Suspense>
       </main>
     </>
   );

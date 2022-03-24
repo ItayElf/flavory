@@ -1,17 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Auth } from "./pages/auth";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { apiUrl } from "./constants";
-import { Feed } from "./pages/feed";
-import RecipeView from "./pages/recipeView";
-import { RecipeEdit } from "./pages/recipeEdit";
 import { NotFound } from "./components/notFound";
-import { RecipeCreate } from "./pages/recipeCreate";
+import "./index.css";
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom";
+import reportWebVitals from "./reportWebVitals";
+import Loading from "./components/loading";
+
+const App = React.lazy(() => import("./App"));
+const Auth = React.lazy(() => import("./pages/auth"));
+const Feed = React.lazy(() => import("./pages/feed"));
+const RecipeView = React.lazy(() => import("./pages/recipeView"));
+const RecipeEdit = React.lazy(() => import("./pages/recipeEdit"));
+const RecipeCreate = React.lazy(() => import("./pages/recipeCreate"));
 
 const client = new ApolloClient({
   uri: apiUrl + "graphql",
@@ -26,19 +28,21 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <React.StrictMode>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/signIn" element={<Auth signIn key={"signIn"} />} />
-          <Route
-            path="/signUp"
-            element={<Auth signIn={false} key={"signUp"} />}
-          />
-          <Route path="/feed" element={<Feed />} />
-          <Route path="/recipe/:id" element={<RecipeView />} />
-          <Route path="/recipe/edit/:id" element={<RecipeEdit />} />
-          <Route path="/recipe/post" element={<RecipeCreate />} />
-          <Route path="*" element={<NotFound className="h-screen" />} />
-        </Routes>
+        <Suspense fallback={<Loading className="h-screen" />}>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/signIn" element={<Auth signIn key={"signIn"} />} />
+            <Route
+              path="/signUp"
+              element={<Auth signIn={false} key={"signUp"} />}
+            />
+            <Route path="/feed" element={<Feed />} />
+            <Route path="/recipe/:id" element={<RecipeView />} />
+            <Route path="/recipe/edit/:id" element={<RecipeEdit />} />
+            <Route path="/recipe/post" element={<RecipeCreate />} />
+            <Route path="*" element={<NotFound className="h-screen" />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </React.StrictMode>
   </ApolloProvider>,

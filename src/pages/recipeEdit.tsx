@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { gql, useApolloClient } from "@apollo/client";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 import Hashids from "hashids";
@@ -7,9 +7,11 @@ import Recipe from "../interfaces/Recipe";
 import Loading from "../components/loading";
 import { NotFound } from "../components/notFound";
 import { Header } from "../components/header";
-import { RecipeEditor } from "../components/recipeEditor";
 import { safeMutation } from "../utils/fetchUtils";
 import { escape } from "../utils/fetchUtils";
+import React from "react";
+
+const RecipeEditor = React.lazy(() => import("../components/recipeEditor"));
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -49,7 +51,7 @@ mutation {
 }
 `;
 
-export function RecipeEdit() {
+export default function RecipeEdit() {
   const [recipe, setRecipe] = useState<Recipe | undefined | null>(null);
   const client = useApolloClient();
   const { id: encoded } = useParams();
@@ -97,11 +99,13 @@ export function RecipeEdit() {
     <>
       <Header user={user} contentStyle="w-full" />
       <main className="mt-16">
-        <RecipeEditor
-          recipe={recipe}
-          onDiscard={() => navigate(`/recipe/${encoded}`)}
-          onSave={save}
-        />
+        <Suspense fallback={<Loading />}>
+          <RecipeEditor
+            recipe={recipe}
+            onDiscard={() => navigate(`/recipe/${encoded}`)}
+            onSave={save}
+          />
+        </Suspense>
       </main>
     </>
   );
