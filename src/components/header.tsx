@@ -37,7 +37,9 @@ export function Header({ contentStyle, user }: Props) {
         {user ? (
           <div className="flex items-center">
             <MdOutlineExplore className="mr-6 h-7 w-7" />
-            <MdOutlineAddBox className="mr-6 h-7 w-7" />
+            <Link to={"/recipe/post"}>
+              <MdOutlineAddBox className="mr-6 h-7 w-7 cursor-pointer" />
+            </Link>
             <img
               src={apiUrl + `images/users/${user.name}`}
               className="h-11 w-11 rounded-full ring-2 ring-primary-50"

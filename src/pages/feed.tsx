@@ -60,9 +60,6 @@ export function Feed() {
       return;
     }
     try {
-      //   const res = await client.query({
-      //     query: feedQuery(posts ?? [], globals.accessToken),
-      //   });
       const res = await safeQuery(client, feedQuery, posts ?? []);
       setPosts([...(posts ?? []), ...res.data.feed]);
     } catch (e) {
@@ -76,9 +73,6 @@ export function Feed() {
 
   useEffect(() => {
     const getSuggestions = async () => {
-      //   const res = await client.query({
-      //     query: suggestedQuery(globals.accessToken),
-      //   });
       const res = await safeQuery(client, suggestedQuery);
       setSuggestions(res.data.suggestions);
     };

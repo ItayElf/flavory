@@ -46,7 +46,7 @@ export default function PostCard({ post, currentUser, setModalPost }: Props) {
   const [cooked, setCooked] = useState(
     post.cooked.indexOf(currentUser.name) !== -1
   );
-  const func = setModalPost ? setModalPost : (post: PostPreview) => {};
+  const func = setModalPost ? setModalPost : () => {};
 
   const likes = () =>
     post.likes.length -

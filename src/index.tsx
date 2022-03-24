@@ -11,14 +11,15 @@ import { Feed } from "./pages/feed";
 import RecipeView from "./pages/recipeView";
 import { RecipeEdit } from "./pages/recipeEdit";
 import { NotFound } from "./components/notFound";
+import { RecipeCreate } from "./pages/recipeCreate";
 
 const client = new ApolloClient({
   uri: apiUrl + "graphql",
   cache: new InMemoryCache({ addTypename: false }),
-  // defaultOptions: {
-  //   query: { fetchPolicy: "no-cache" },
-  //   mutate: { fetchPolicy: "no-cache" },
-  // },
+  defaultOptions: {
+    query: { fetchPolicy: "no-cache" },
+    mutate: { fetchPolicy: "no-cache" },
+  },
 });
 
 ReactDOM.render(
@@ -35,6 +36,7 @@ ReactDOM.render(
           <Route path="/feed" element={<Feed />} />
           <Route path="/recipe/:id" element={<RecipeView />} />
           <Route path="/recipe/edit/:id" element={<RecipeEdit />} />
+          <Route path="/recipe/post" element={<RecipeCreate />} />
           <Route path="*" element={<NotFound className="h-screen" />} />
         </Routes>
       </BrowserRouter>

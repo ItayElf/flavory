@@ -92,6 +92,16 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
     setImage(fileBase64 + "");
   };
 
+  useEffect(() => {
+    const unloadCallback = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+      return "";
+    };
+    window.addEventListener("beforeunload", unloadCallback);
+    return () => window.removeEventListener("beforeunload", unloadCallback);
+  }, []);
+
   return (
     <>
       <Transition

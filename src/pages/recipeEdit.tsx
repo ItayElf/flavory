@@ -71,6 +71,16 @@ export function RecipeEdit() {
   }, [client, id]);
 
   const save = async (recipe: Recipe, image: string | null) => {
+    if (!recipe.title) {
+      alert("Please add a title for the recipe");
+      return;
+    } else if (recipe.ingredients.length === 0) {
+      alert("Please add ingredients for the recipe");
+      return;
+    } else if (recipe.steps.length === 0) {
+      alert("please add steps for the recipe");
+      return;
+    }
     await safeMutation(client, editRecipe, recipe, image);
     navigate(`/recipe/${encoded}`);
   };
