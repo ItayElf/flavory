@@ -10,6 +10,7 @@ import { TextField } from "./textField";
 import { Transition } from "@headlessui/react";
 import { MdMenu, MdOutlineClose, MdDone } from "react-icons/md";
 import { IngredientsModal } from "./ingredientsModal";
+import { StepsModal } from "./stepsModal";
 
 interface Props {
   recipe?: Recipe;
@@ -28,7 +29,9 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   const [hours, setHours] = useState(h === 0 ? "" : h + "");
   const [minutes, setMinutes] = useState(m === 0 ? "" : m + "");
   const [ingredients, setIngredients] = useState(recipe?.ingredients ?? []);
+  const [steps, setSteps] = useState(recipe?.steps ?? []);
   const [ingModalOpen, setIngModalOpen] = useState(false);
+  const [stepsModalOpen, setStepsModalOpen] = useState(false);
   const [image, setImage] = useState<string | undefined | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -53,10 +56,10 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
       author,
       title,
       description,
-      steps: recipe?.steps ?? [],
+      steps,
       cookingTime,
       servings,
-      ingredients: ingredients,
+      ingredients,
     } as Recipe;
   };
 
@@ -166,7 +169,12 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
           <ButtonSecondary className="h5" onClick={() => setIngModalOpen(true)}>
             Edit Ingredients
           </ButtonSecondary>
-          <ButtonSecondary className="h5">Edit Steps</ButtonSecondary>
+          <ButtonSecondary
+            className="h5"
+            onClick={() => setStepsModalOpen(true)}
+          >
+            Edit Steps
+          </ButtonSecondary>
           <div className="!mb-16 flex w-full sm:!mt-32">
             <ButtonSecondary className="h5 mr-3 w-1/2" onClick={onDiscard}>
               Discard
@@ -210,6 +218,14 @@ export function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
         onClose={(ings) => {
           setIngredients(ings);
           setIngModalOpen(false);
+        }}
+      />
+      <StepsModal
+        steps={steps}
+        isOpen={stepsModalOpen}
+        onClose={(s) => {
+          setSteps(s);
+          setStepsModalOpen(false);
         }}
       />
     </>

@@ -20,6 +20,10 @@ export function IngredientsModal({
   const [ingredients, setIngredients] = useState([...ings]);
   const focus = useRef(null);
 
+  const valids = ingredients.filter(
+    (i) => i.name !== "" && !isNaN(i.quantity) && i.quantity > 0
+  );
+
   return (
     <Transition
       show={isOpen}
@@ -32,13 +36,19 @@ export function IngredientsModal({
     >
       <Dialog
         as="div"
-        onClose={() => onClose(ingredients)}
+        onClose={() => {
+          onClose(valids);
+          setIngredients(valids);
+        }}
         className="fixed inset-0 h-full w-full overflow-y-auto sm:m-4"
         initialFocus={focus}
       >
         <Dialog.Overlay
           className="fixed inset-0 bg-black/75"
-          onClick={() => onClose(ingredients)}
+          onClick={() => {
+            onClose(valids);
+            setIngredients(valids);
+          }}
         />
         <button className="hidden" ref={focus}></button>
         <div className="relative flex h-full w-screen flex-col overflow-y-auto rounded border-2 border-primary-600 bg-white sm:mx-auto sm:h-auto sm:min-w-[640px] sm:max-w-[960px]">
@@ -75,7 +85,7 @@ export function IngredientsModal({
                 onClick={() =>
                   setIngredients([
                     ...ingredients,
-                    { name: "", units: "", quantity: 0 },
+                    { name: "", units: "", quantity: NaN },
                   ])
                 }
               >
