@@ -8,7 +8,15 @@ import { ButtonSecondary } from "./buttonSecondary";
 import RecipeContent from "./recipeContent";
 import { TextField } from "./textField";
 import { Transition } from "@headlessui/react";
-import { MdMenu, MdOutlineClose, MdDone } from "react-icons/md";
+import {
+  MdMenu,
+  MdOutlineClose,
+  MdDone,
+  MdFormatListBulleted,
+  MdRestaurant,
+  MdPhoto,
+  MdImageNotSupported,
+} from "react-icons/md";
 import { IngredientsModal } from "./ingredientsModal";
 import { StepsModal } from "./stepsModal";
 
@@ -128,11 +136,17 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
           />
           {image ? (
             <ButtonSecondary className="h5" onClick={handleImage}>
-              Remove Image
+              <div className="flex items-center justify-center space-x-2">
+                <MdImageNotSupported />
+                <span>Remove Image</span>
+              </div>
             </ButtonSecondary>
           ) : (
             <ButtonPrimary className="h5" onClick={handleImage}>
-              Add Image
+              <div className="flex items-center justify-center space-x-2">
+                <MdPhoto />
+                <span>Add Image</span>
+              </div>
             </ButtonPrimary>
           )}
           <input
@@ -177,13 +191,19 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
             label="Author"
           />
           <ButtonSecondary className="h5" onClick={() => setIngModalOpen(true)}>
-            Edit Ingredients
+            <div className="flex items-center justify-center space-x-2">
+              <MdRestaurant />
+              <span>Edit Ingredients</span>
+            </div>
           </ButtonSecondary>
           <ButtonSecondary
             className="h5"
             onClick={() => setStepsModalOpen(true)}
           >
-            Edit Steps
+            <div className="flex items-center justify-center space-x-2">
+              <MdFormatListBulleted />
+              <span>Edit Steps</span>
+            </div>
           </ButtonSecondary>
           <div className="!mb-16 flex w-full sm:!mt-32">
             <ButtonSecondary className="h5 mr-3 w-1/2" onClick={onDiscard}>
