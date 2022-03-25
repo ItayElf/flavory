@@ -21,6 +21,7 @@ interface Props {
   post: PostPreview;
   currentUser: User;
   setModalPost?: (post: PostPreview) => void;
+  className?: string;
 }
 
 const likeMutation = (token: string, postId: number, like: boolean) => gql`
@@ -38,7 +39,12 @@ mutation {
 }
 `;
 
-export default function PostCard({ post, currentUser, setModalPost }: Props) {
+export default function PostCard({
+  post,
+  currentUser,
+  setModalPost,
+  className,
+}: Props) {
   const client = useApolloClient();
   const [liked, setLiked] = useState(
     post.likes.indexOf(currentUser.name) !== -1
@@ -71,16 +77,22 @@ export default function PostCard({ post, currentUser, setModalPost }: Props) {
   };
 
   return (
-    <div className="w-full shadow-sm shadow-primary-200 sm:w-[640px]">
+    <div
+      className={`w-full shadow-sm shadow-primary-200 sm:w-[640px] ${className}`}
+    >
       <div className="flex flex-row items-center justify-between bg-white py-2 px-4">
         <div className="flex items-center">
-          <img
-            src={apiUrl + `images/users/${post.poster}`}
-            className={"h-14 w-14 rounded-full ring-2 ring-primary-50"}
-            alt={`${post.poster}'s profile`}
-          />
+          <Link to={`/user/${post.poster}`}>
+            <img
+              src={apiUrl + `images/users/${post.poster}`}
+              className={"h-14 w-14 rounded-full ring-2 ring-primary-50"}
+              alt={`${post.poster}'s profile`}
+            />
+          </Link>
           <div className="ml-4 flex h-full flex-col justify-between">
-            <p className="h6">{post.poster}</p>
+            <Link to={`/user/${post.poster}`}>
+              <p className="h6">{post.poster}</p>
+            </Link>
             <p className="caption text-gray">{timeSince(post.timestamp)}</p>
           </div>
         </div>
