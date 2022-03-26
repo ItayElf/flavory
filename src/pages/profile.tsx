@@ -75,6 +75,7 @@ export default function Profile() {
   const [user, setUser] = useState<User | null | undefined>(null);
   const [tab, setTab] = useState(0);
   const currentUser = useCurrentUser(true);
+  const [modalPost, setModalPost] = useState<PostPreview | null>(null);
   const [following, setFollowing] = useState(
     user?.followers.includes(currentUser?.name ?? "") ?? false
   );
@@ -250,6 +251,7 @@ export default function Profile() {
                   }
                   setPosts(arr);
                 }}
+                setModalPost={setModalPost}
               />
               <PostsPanel
                 posts={cookedBy}
@@ -317,9 +319,11 @@ export default function Profile() {
                   }
                   setCookedBy(arr);
                 }}
+                setModalPost={setModalPost}
               />
             </Tab.Panels>
           </Tab.Group>
+          <PostModal onClose={() => setModalPost(null)} post={modalPost} />
         </div>
       </div>
     </>
@@ -332,10 +336,18 @@ interface Props2 {
   emptyMsg: string;
   onLike: (val: boolean, idx: number) => void;
   onCooked: (val: boolean, idx: number) => void;
+  setModalPost: (post: PostPreview | null) => void;
 }
 
-function PostsPanel({ posts, user, emptyMsg, onLike, onCooked }: Props2) {
-  const [modalPost, setModalPost] = useState<PostPreview | null>(null);
+function PostsPanel({
+  posts,
+  user,
+  emptyMsg,
+  onLike,
+  onCooked,
+  setModalPost,
+}: Props2) {
+  // const [modalPost, setModalPost] = useState<PostPreview | null>(null);
 
   if (posts === null) {
     posts = [];
@@ -362,7 +374,6 @@ function PostsPanel({ posts, user, emptyMsg, onLike, onCooked }: Props2) {
               />
             ))}
           </div>
-          <PostModal onClose={() => setModalPost(null)} post={modalPost} />
         </>
       ) : (
         <div className="flex justify-center">
