@@ -73,7 +73,8 @@ const getCookedBy = (name: string) => gql`
 
 export default function Profile() {
   const [user, setUser] = useState<User | null | undefined>(null);
-  const currentUser = useCurrentUser(false);
+  const [tab, setTab] = useState(0);
+  const currentUser = useCurrentUser(true);
   const [following, setFollowing] = useState(
     user?.followers.includes(currentUser?.name ?? "") ?? false
   );
@@ -94,20 +95,24 @@ export default function Profile() {
       }
     }
     getData();
+    setTab(0);
+    window.scrollTo(0, 0);
   }, [client, name]);
 
   const handleChange = async (i: number) => {
+    setTab(i);
     if (i === 1 && cookedBy === null) {
       try {
         const res = await client.query({ query: getCookedBy(name ?? "") });
         setCookedBy(res.data.cookedBy);
       } catch (e) {
+        console.error(e);
         setCookedBy([]);
       }
     }
   };
 
-  if (user === null || posts === null) {
+  if (user === null || posts === null || !currentUser) {
     return <Loading className="h-screen" />;
   } else if (user === undefined || posts === undefined) {
     return <NotFound className="h-screen" />;
@@ -159,7 +164,7 @@ export default function Profile() {
             </div>
           </div>
           <div className="mt-8 mb-4 h-px w-full bg-primary-300"></div>
-          <Tab.Group onChange={handleChange}>
+          <Tab.Group onChange={handleChange} selectedIndex={tab}>
             <Tab.List className="h6 sm:p mx-2 flex justify-center space-x-8 rounded-xl bg-primary-200 p-1 px-4">
               <Tab as={Fragment}>
                 {({ selected }) => (
@@ -187,13 +192,131 @@ export default function Profile() {
             <Tab.Panels className="mt-6">
               <PostsPanel
                 posts={posts}
-                user={user}
+                user={currentUser!}
                 emptyMsg="This user has no posts."
+                onLike={(val, idx) => {
+                  let arr = [...posts];
+                  if (val) {
+                    arr[idx] = {
+                      ...arr[idx],
+                      likes: [...arr[idx].likes, currentUser.name ?? ""],
+                    };
+                  } else {
+                    arr[idx] = {
+                      ...arr[idx],
+                      likes: arr[idx].likes.filter(
+                        (v) => v !== currentUser.name
+                      ),
+                    };
+                  }
+                  const newPost = arr[idx];
+                  if (cookedBy !== null) {
+                    setCookedBy(
+                      cookedBy.map((v) => (v.idx === newPost.idx ? newPost : v))
+                    );
+                  }
+                  setPosts(arr);
+                }}
+                onCooked={(val, idx) => {
+                  let arr = [...posts];
+                  if (val) {
+                    arr[idx] = {
+                      ...arr[idx],
+                      cooked: [...arr[idx].cooked, currentUser.name ?? ""],
+                    };
+                  } else {
+                    arr[idx] = {
+                      ...arr[idx],
+                      cooked: arr[idx].cooked.filter(
+                        (v) => v !== currentUser.name
+                      ),
+                    };
+                  }
+                  const newPost = arr[idx];
+                  if (cookedBy !== null) {
+                    if (!owner) {
+                      setCookedBy(
+                        cookedBy.map((v) =>
+                          v.idx === newPost.idx ? newPost : v
+                        )
+                      );
+                    } else {
+                      setCookedBy(
+                        [...cookedBy, newPost].sort(
+                          (a, b) => b.timestamp - a.timestamp
+                        )
+                      );
+                    }
+                  }
+                  setPosts(arr);
+                }}
               />
               <PostsPanel
                 posts={cookedBy}
-                user={user}
+                user={currentUser!}
                 emptyMsg="This user hasn't cooked anything yet."
+                onLike={(val, idx) => {
+                  if (!cookedBy) {
+                    return;
+                  }
+                  let arr = [...cookedBy];
+                  if (val) {
+                    arr[idx] = {
+                      ...arr[idx],
+                      likes: [...arr[idx].likes, currentUser.name ?? ""],
+                    };
+                  } else {
+                    arr[idx] = {
+                      ...arr[idx],
+                      likes: arr[idx].likes.filter(
+                        (v) => v !== currentUser.name
+                      ),
+                    };
+                  }
+                  const newPost = arr[idx];
+                  setPosts(
+                    posts.map((v) => (v.idx === newPost.idx ? newPost : v))
+                  );
+                  setCookedBy(arr);
+                }}
+                onCooked={(val, idx) => {
+                  if (!cookedBy) {
+                    return;
+                  }
+                  let arr = [...cookedBy];
+                  if (val) {
+                    arr[idx] = {
+                      ...arr[idx],
+                      cooked: [...arr[idx].cooked, currentUser.name ?? ""],
+                    };
+                  } else if (owner) {
+                    arr = arr.filter((v) => v.idx !== cookedBy[idx].idx);
+                  } else {
+                    arr[idx] = {
+                      ...arr[idx],
+                      cooked: arr[idx].cooked.filter(
+                        (v) => v !== currentUser.name
+                      ),
+                    };
+                  }
+                  if (owner) {
+                    const newPost = {
+                      ...cookedBy[idx],
+                      cooked: cookedBy[idx].cooked.filter(
+                        (v) => v !== currentUser.name
+                      ),
+                    };
+                    setPosts(
+                      posts.map((v) => (v.idx === newPost.idx ? newPost : v))
+                    );
+                  } else {
+                    const newPost = arr[idx];
+                    setPosts(
+                      posts.map((v) => (v.idx === newPost.idx ? newPost : v))
+                    );
+                  }
+                  setCookedBy(arr);
+                }}
               />
             </Tab.Panels>
           </Tab.Group>
@@ -203,15 +326,15 @@ export default function Profile() {
   );
 }
 
-function PostsPanel({
-  posts,
-  user,
-  emptyMsg,
-}: {
+interface Props2 {
   posts: PostPreview[] | null;
   user: User;
   emptyMsg: string;
-}) {
+  onLike: (val: boolean, idx: number) => void;
+  onCooked: (val: boolean, idx: number) => void;
+}
+
+function PostsPanel({ posts, user, emptyMsg, onLike, onCooked }: Props2) {
   const [modalPost, setModalPost] = useState<PostPreview | null>(null);
 
   if (posts === null) {
@@ -222,19 +345,20 @@ function PostsPanel({
       </Tab.Panel>
     );
   }
-
   return (
     <Tab.Panel>
       {posts.length !== 0 ? (
         <>
           <div className="flex w-full snap-y flex-col items-center justify-center space-y-8 bg-primary-25 sm:snap-none">
-            {posts.map((p) => (
+            {posts.map((p, i) => (
               <PostCard
                 key={p.idx}
                 post={p}
                 currentUser={user}
                 setModalPost={(post) => setModalPost(post)}
                 className="shadow-gray"
+                onLike={(val) => onLike(val, i)}
+                onCook={(val) => onCooked(val, i)}
               />
             ))}
           </div>

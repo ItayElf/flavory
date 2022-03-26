@@ -1,6 +1,7 @@
 import { PostPreview } from "../interfaces/post";
 import { Dialog } from "@headlessui/react";
 import { MdOutlineComment, MdKeyboardBackspace } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
 import { FormEvent, useRef, useState } from "react";
 import Comment from "../interfaces/comment";
@@ -83,7 +84,7 @@ export default function PostModal({ post, onClose }: Props) {
               </div>
             ) : (
               shownComments.map((c, i) => (
-                <CommentTile c={c} post={post!} key={i} />
+                <CommentTile c={c} post={post!} key={i} onClose={onClose} />
               ))
             )}
           </div>
@@ -106,20 +107,37 @@ export default function PostModal({ post, onClose }: Props) {
   );
 }
 
-const CommentTile = ({ c, post }: { c: Comment; post: PostPreview }) => {
+interface Props2 {
+  c: Comment;
+  post: PostPreview;
+  onClose: () => void;
+}
+
+const CommentTile = ({ c, post, onClose }: Props2) => {
+  const navigate = useNavigate();
+
+  const gotoUser = () => {
+    onClose();
+    navigate(`/user/${c.commenter}`);
+  };
+
   return (
     <>
       <div className="flex items-start space-x-4">
         <img
           src={apiUrl + `images/users/${c.commenter}`}
-          className={"h-10 w-10 rounded-full ring-2 ring-primary-50"}
+          className={
+            "h-10 w-10 cursor-pointer rounded-full ring-2 ring-primary-50"
+          }
           alt={`${c.commenter}'s profile`}
+          onClick={gotoUser}
         />
         <div className="space-y-1">
           <span
-            className={`s1 font-semibold ${
+            className={`s1 cursor-pointer font-semibold ${
               post.poster === c.commenter ? "text-primary-900" : "text-black"
             }`}
+            onClick={gotoUser}
           >
             {post.poster === c.commenter && "⭐"}
             {c.commenter}

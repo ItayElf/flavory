@@ -11,7 +11,7 @@ import { Menu, Transition } from "@headlessui/react";
 import User from "../interfaces/user";
 
 interface Props {
-  user: User | null;
+  user?: User;
   contentStyle?: string;
 }
 

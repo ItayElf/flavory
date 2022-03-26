@@ -22,7 +22,7 @@ const currentUser = (token: string) => gql`
 export default function useCurrentUser(forceAuth: boolean) {
   const navigate = useNavigate();
   const client = useApolloClient();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | undefined>(undefined);
   useEffect(() => {
     const getUser = async () => {
       try {

@@ -22,6 +22,8 @@ interface Props {
   currentUser: User;
   setModalPost?: (post: PostPreview) => void;
   className?: string;
+  onLike?: (val: boolean) => void;
+  onCook?: (cal: boolean) => void;
 }
 
 const likeMutation = (token: string, postId: number, like: boolean) => gql`
@@ -44,6 +46,8 @@ export default function PostCard({
   currentUser,
   setModalPost,
   className,
+  onLike,
+  onCook,
 }: Props) {
   const client = useApolloClient();
   const [liked, setLiked] = useState(
@@ -70,10 +74,16 @@ export default function PostCard({
     }
     await safeMutation(client, likeMutation, post.idx, !value);
     setLiked(!value);
+    if (onLike) {
+      onLike(!value);
+    }
   };
   const toggleCooked = async () => {
     await safeMutation(client, cookedMutation, post.idx, !cooked);
     setCooked(!cooked);
+    if (onCook) {
+      onCook(!cooked);
+    }
   };
 
   return (
