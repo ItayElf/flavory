@@ -160,7 +160,7 @@ export default function Profile() {
           />
           <div className="mt-8 mb-4 h-px w-full bg-primary-300"></div>
           <Tab.Group onChange={handleChange} selectedIndex={tab}>
-            <Tab.List className="h6 sm:p mx-2 flex justify-center space-x-8 rounded-xl bg-primary-200 p-1 px-4">
+            <Tab.List className="h6 mx-2 flex justify-center space-x-8 rounded-xl bg-primary-200 p-1 px-4">
               <Tab as={Fragment}>
                 {({ selected }) => (
                   <button
@@ -359,8 +359,6 @@ function PostsPanel({
   onCooked,
   setModalPost,
 }: Props2) {
-  // const [modalPost, setModalPost] = useState<PostPreview | null>(null);
-
   if (posts === null) {
     posts = [];
     return (
@@ -380,7 +378,7 @@ function PostsPanel({
                 post={p}
                 currentUser={user}
                 setModalPost={(post) => setModalPost(post)}
-                className="shadow-gray"
+                className="block"
                 onLike={(val) => onLike(val, i)}
                 onCook={(val) => onCooked(val, i)}
               />
@@ -406,10 +404,10 @@ interface Props3 {
 
 function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
   return (
-    <div className="flex space-x-16 p-4">
+    <div className="flex justify-between p-4 sm:justify-start sm:space-x-16">
       <img
         src={apiUrl + `images/users/${user.name}`}
-        className="h-36 w-36 rounded-full"
+        className="h-24 w-24 rounded-full sm:h-36 sm:w-36"
         alt={`${user.name}'s profile`}
       />
       <div className="flex flex-col space-y-6">
@@ -430,13 +428,19 @@ function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
           )}
         </div>
         <div className="b1 flex w-full space-x-8">
-          <div>
+          <div className="flex flex-col items-center sm:block">
             <span className="font-bold">{user.posts.length}</span> posts
           </div>
-          <div className="cursor-pointer" onClick={() => setModal(1)}>
+          <div
+            className="flex cursor-pointer flex-col items-center sm:block"
+            onClick={() => setModal(1)}
+          >
             <span className="font-bold">{user.followers.length}</span> followers
           </div>
-          <div className="cursor-pointer" onClick={() => setModal(2)}>
+          <div
+            className="flex cursor-pointer flex-col items-center sm:block"
+            onClick={() => setModal(2)}
+          >
             <span className="font-bold">{user.following.length}</span> following
           </div>
         </div>
