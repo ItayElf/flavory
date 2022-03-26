@@ -14,6 +14,7 @@ import { PostPreview } from "../interfaces/post";
 import PostCard from "../components/postCard";
 import PostModal from "../components/postModal";
 import { safeMutation } from "../utils/fetchUtils";
+import { FollowersModal } from "../components/followersModal";
 
 const query = (name: string) => gql`
 {
@@ -82,6 +83,7 @@ const follow = (token: string, name: string, follow: boolean) => gql`
 
 export default function Profile() {
   const [user, setUser] = useState<User | null | undefined>(null);
+  const [modal, setModal] = useState(0);
   const [tab, setTab] = useState(0);
   const currentUser = useCurrentUser(true);
   const [modalPost, setModalPost] = useState<PostPreview | null>(null);
@@ -149,50 +151,13 @@ export default function Profile() {
       <Header user={currentUser} contentStyle="w-full sm:w-[858px]" />
       <div className="mt-16 py-4">
         <div className="mx-auto w-full max-w-[640px] bg-white shadow shadow-primary-200">
-          <div className="flex space-x-16 p-4">
-            <img
-              src={apiUrl + `images/users/${user.name}`}
-              className="h-36 w-36 rounded-full"
-              alt={`${user.name}'s profile`}
-            />
-            <div className="flex flex-col space-y-6">
-              <div className="flex space-x-8">
-                <h1 className="h4">{user.name}</h1>
-                {following ? (
-                  <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
-                    Following
-                  </ButtonSecondary>
-                ) : owner ? (
-                  <ButtonSecondary className="h6 px-3 py-1">
-                    Edit Profile
-                  </ButtonSecondary>
-                ) : (
-                  <ButtonPrimary className="h6 px-3 py-1" onClick={onClick}>
-                    Follow
-                  </ButtonPrimary>
-                )}
-              </div>
-              <div className="b1 flex w-full space-x-8">
-                <div>
-                  <span className="font-bold">{user.posts.length}</span> posts
-                </div>
-                <div>
-                  <span className="font-bold">{user.followers.length}</span>{" "}
-                  followers
-                </div>
-                <div>
-                  <span className="font-bold">{user.following.length}</span>{" "}
-                  following
-                </div>
-              </div>
-              <div className="b1">
-                <p>{user.bio}</p>
-                <a href={user.link} className="font-bold text-primary-600">
-                  {user.link}
-                </a>
-              </div>
-            </div>
-          </div>
+          <ProfileHeader
+            following={following}
+            onClick={onClick}
+            owner={owner}
+            user={user}
+            setModal={setModal}
+          />
           <div className="mt-8 mb-4 h-px w-full bg-primary-300"></div>
           <Tab.Group onChange={handleChange} selectedIndex={tab}>
             <Tab.List className="h6 sm:p mx-2 flex justify-center space-x-8 rounded-xl bg-primary-200 p-1 px-4">
@@ -353,6 +318,24 @@ export default function Profile() {
             </Tab.Panels>
           </Tab.Group>
           <PostModal onClose={() => setModalPost(null)} post={modalPost} />
+          <FollowersModal
+            currentUser={currentUser}
+            followers={user.followers}
+            isOpen={modal === 1}
+            onClose={() => {
+              setModal(0);
+            }}
+            title="Followers"
+          />
+          <FollowersModal
+            currentUser={currentUser}
+            followers={user.following}
+            isOpen={modal === 2}
+            onClose={() => {
+              setModal(0);
+            }}
+            title="Following"
+          />
         </div>
       </div>
     </>
@@ -410,5 +393,60 @@ function PostsPanel({
         </div>
       )}
     </Tab.Panel>
+  );
+}
+
+interface Props3 {
+  following: boolean;
+  user: User;
+  owner: boolean;
+  onClick: () => {};
+  setModal: (val: number) => void;
+}
+
+function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
+  return (
+    <div className="flex space-x-16 p-4">
+      <img
+        src={apiUrl + `images/users/${user.name}`}
+        className="h-36 w-36 rounded-full"
+        alt={`${user.name}'s profile`}
+      />
+      <div className="flex flex-col space-y-6">
+        <div className="flex space-x-8">
+          <h1 className="h4">{user.name}</h1>
+          {following ? (
+            <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
+              Following
+            </ButtonSecondary>
+          ) : owner ? (
+            <ButtonSecondary className="h6 px-3 py-1">
+              Edit Profile
+            </ButtonSecondary>
+          ) : (
+            <ButtonPrimary className="h6 px-3 py-1" onClick={onClick}>
+              Follow
+            </ButtonPrimary>
+          )}
+        </div>
+        <div className="b1 flex w-full space-x-8">
+          <div>
+            <span className="font-bold">{user.posts.length}</span> posts
+          </div>
+          <div className="cursor-pointer" onClick={() => setModal(1)}>
+            <span className="font-bold">{user.followers.length}</span> followers
+          </div>
+          <div className="cursor-pointer" onClick={() => setModal(2)}>
+            <span className="font-bold">{user.following.length}</span> following
+          </div>
+        </div>
+        <div className="b1">
+          <p>{user.bio}</p>
+          <a href={user.link} className="font-bold text-primary-600">
+            {user.link}
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
