@@ -13,6 +13,7 @@ import { ButtonSecondary } from "../components/buttonSecondary";
 import { PostPreview } from "../interfaces/post";
 import PostCard from "../components/postCard";
 import PostModal from "../components/postModal";
+import { safeMutation } from "../utils/fetchUtils";
 
 const query = (name: string) => gql`
 {
@@ -71,6 +72,14 @@ const getCookedBy = (name: string) => gql`
 }
 `;
 
+const follow = (token: string, name: string, follow: boolean) => gql`
+  mutation {
+    ${follow ? "follow" : "unfollow"}(name: "${name}", token: "${token}") {
+      success
+    }
+  }
+  `;
+
 export default function Profile() {
   const [user, setUser] = useState<User | null | undefined>(null);
   const [tab, setTab] = useState(0);
@@ -99,6 +108,22 @@ export default function Profile() {
     setTab(0);
     window.scrollTo(0, 0);
   }, [client, name]);
+
+  const onClick = async () => {
+    if (!user || !currentUser) {
+      return;
+    }
+    await safeMutation(client, follow, name, !following);
+    if (!following) {
+      setUser({ ...user, followers: [...user.followers, currentUser.name] });
+    } else {
+      setUser({
+        ...user,
+        followers: user.followers.filter((v) => v !== currentUser.name),
+      });
+    }
+    setFollowing(!following);
+  };
 
   const handleChange = async (i: number) => {
     setTab(i);
@@ -134,13 +159,17 @@ export default function Profile() {
               <div className="flex space-x-8">
                 <h1 className="h4">{user.name}</h1>
                 {following ? (
-                  <ButtonSecondary className="h6">Following</ButtonSecondary>
+                  <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
+                    Following
+                  </ButtonSecondary>
                 ) : owner ? (
                   <ButtonSecondary className="h6 px-3 py-1">
                     Edit Profile
                   </ButtonSecondary>
                 ) : (
-                  <ButtonPrimary className="h6 px-3 py-1">Follow</ButtonPrimary>
+                  <ButtonPrimary className="h6 px-3 py-1" onClick={onClick}>
+                    Follow
+                  </ButtonPrimary>
                 )}
               </div>
               <div className="b1 flex w-full space-x-8">

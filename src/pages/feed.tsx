@@ -8,6 +8,7 @@ import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
 import { safeMutation, safeQuery } from "../utils/fetchUtils";
 import PostModal from "../components/postModal";
+import { Link } from "react-router-dom";
 
 const pageSize = 20;
 
@@ -173,13 +174,17 @@ function SuggestionTile({ apiUrl, u, client }: Props2) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center space-x-4">
-        <img
-          src={apiUrl + `images/users/${u.suggested}`}
-          alt={`${u.suggested}'s profile`}
-          className="h-12 w-12 rounded-full"
-        />
+        <Link to={`/user/${u.suggested}`}>
+          <img
+            src={apiUrl + `images/users/${u.suggested}`}
+            alt={`${u.suggested}'s profile`}
+            className="h-12 w-12 rounded-full"
+          />
+        </Link>
         <div className="flex flex-col">
-          <p className="s1">{u.suggested}</p>
+          <Link to={`/user/${u.suggested}`}>
+            <p className="s1">{u.suggested}</p>
+          </Link>
           <p className="caption text-gray">Followed by {u.followedBy}</p>
         </div>
       </div>
