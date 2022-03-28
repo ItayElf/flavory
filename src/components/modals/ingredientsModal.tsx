@@ -2,7 +2,6 @@ import { Transition, Dialog } from "@headlessui/react";
 import { useRef, useState } from "react";
 import Ingredient from "../../interfaces/Ingredient";
 import { TextField } from "../textField";
-import { units as available } from "../../constants";
 import { MdCancel, MdKeyboardBackspace } from "react-icons/md";
 import { ButtonPrimary } from "../buttonPrimary";
 
@@ -111,14 +110,14 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
   const [units, setUnits] = useState(ing.units ? ing.units : "");
   const [name, setName] = useState(ing.name);
 
-  const filtered =
-    units === ""
-      ? available
-      : available.filter(
-          (u) =>
-            u.toLowerCase().includes(units.toLowerCase()) &&
-            u.toLowerCase() !== units.toLowerCase()
-        );
+  // const filtered =
+  //   units === ""
+  //     ? available
+  //     : available.filter(
+  //         (u) =>
+  //           u.toLowerCase().includes(units.toLowerCase()) &&
+  //           u.toLowerCase() !== units.toLowerCase()
+  // );
 
   return (
     <div>
@@ -148,7 +147,7 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
             );
           }}
           label="units"
-          options={filtered}
+          // options={filtered}
           className="w-full"
           id={ing.name + ing.quantity + ing.units + 2}
         />

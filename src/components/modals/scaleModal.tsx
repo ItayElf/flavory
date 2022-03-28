@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ScaleModal({ isOpen, onClose, servings }: Props) {
-  const [value, setValue] = useState(1 / 2);
+  const [value, setValue] = useState(1);
   const focus = useRef(null);
 
   return (

@@ -56,7 +56,7 @@ export const formatQuantity = (quantity: number) => {
   const gcd = (a: number, b: number) => (b ? gcd(b, a % b) : a);
 
   const unit = Math.floor(quantity);
-  quantity = Math.round((quantity - unit) * 1000) / 1000;
+  quantity = Math.round((quantity - unit) * 100) / 100;
   if (quantity === 0) {
     return unit + "";
   }
@@ -72,8 +72,9 @@ const getFraction = (top: number, bottom: number) => {
   const remainder = {
     "1/2": "½",
     "1/3": "⅓",
-    "333/1000": "⅓",
+    "33/100": "⅓",
     "2/3": "⅔",
+    "67/100": "⅔",
     "1/4": "¼",
     "3/4": "¾",
     "1/5": "⅕",
@@ -81,7 +82,7 @@ const getFraction = (top: number, bottom: number) => {
     "3/5": "⅗",
     "4/5": "⅘",
     "1/6": "⅙",
-    "333/500": "⅙",
+    "17/100": "⅙",
     "5/6": "⅚",
     "1/7": "⅐",
     "1/8": "⅛",

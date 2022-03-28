@@ -1,3 +1,5 @@
+import { units, volumeUnits, weightUnits } from "../constants";
+import Ingredient from "../interfaces/Ingredient";
 import Recipe from "../interfaces/Recipe";
 
 export const scaleRecipe = (recipe: Recipe, factor: number) => {
@@ -33,4 +35,35 @@ export const scaleString = (
       ))
   );
   return value;
+};
+
+export const getConvertable = (recipe: Recipe) => {
+  return {
+    volume: recipe.ingredients.filter((i) =>
+      Object.keys(volumeUnits).includes(i.units.toLowerCase())
+    ),
+    weight: recipe.ingredients.filter((i) =>
+      Object.keys(weightUnits).includes(i.units.toLowerCase())
+    ),
+  };
+};
+
+export const convertIngredient = (ing: Ingredient, to: string) => {
+  if (!units.includes(ing.units)) {
+    throw Error("Non convertable ingredient");
+  }
+  const isVolume = Object.keys(volumeUnits).includes(ing.units);
+  const pool = isVolume ? volumeUnits : weightUnits;
+  const amount =
+    Math.round((ing.quantity * pool[ing.units] * 100) / pool[to]) / 100;
+  if (isNaN(amount)) {
+    throw Error(
+      `Units mismatch! ing is ${ing.units} cannot be converted to ${to}`
+    );
+  }
+  return {
+    ...ing,
+    units: to,
+    quantity: amount,
+  } as Ingredient;
 };
