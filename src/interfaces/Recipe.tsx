@@ -7,7 +7,7 @@ export default interface Recipe {
   description: string;
   steps: string[];
   cookingTime?: number;
-  servings?: string;
+  servings?: string | null;
   ingredients: Ingredient[];
 }
 

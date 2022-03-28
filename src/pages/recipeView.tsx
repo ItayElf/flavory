@@ -15,6 +15,7 @@ import {
   MdEdit,
 } from "react-icons/md";
 import { NotFound } from "../components/notFound";
+import { scale } from "../utils/recipeUtils";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -51,6 +52,9 @@ export default function RecipeView() {
           query: recipeQuery(id),
           fetchPolicy: "no-cache",
         });
+        const r = res.data.recipe;
+        console.log(r);
+        console.log(scale(r, 2));
         setRecipe(res.data.recipe);
       } catch (e) {
         setRecipe(undefined);

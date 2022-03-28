@@ -3,7 +3,7 @@ import { MdTimer, MdRestaurant, MdEdit } from "react-icons/md";
 import Recipe from "../interfaces/Recipe";
 import { useState } from "react";
 import Ingredient from "../interfaces/Ingredient";
-import { timeAsHours } from "../utils/formatUtils";
+import { formatQuantity, timeAsHours } from "../utils/formatUtils";
 
 interface Props {
   recipe: Recipe;
@@ -86,7 +86,7 @@ const IngredientTile = ({ ingredient }: { ingredient: Ingredient }) => {
       }`}
       onClick={() => setMarked(!marked)}
     >
-      {ingredient.quantity} {ingredient.units} {ingredient.name}
+      {formatQuantity(ingredient.quantity)} {ingredient.units} {ingredient.name}
     </p>
   );
 };

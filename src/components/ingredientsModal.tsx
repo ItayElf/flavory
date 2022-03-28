@@ -131,7 +131,7 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
           value={quantity}
           setValue={(v) => {
             setQuantity(v);
-            onChange({ name, quantity: parseInt(v), units }, idx - 1);
+            onChange({ name, quantity: parseFloat(v), units }, idx - 1);
           }}
           label="Quantity"
           className="h-full"
@@ -142,7 +142,10 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
           value={units}
           setValue={(v) => {
             setUnits(v);
-            onChange({ name, quantity: parseInt(quantity), units: v }, idx - 1);
+            onChange(
+              { name, quantity: parseFloat(quantity), units: v },
+              idx - 1
+            );
           }}
           label="units"
           options={filtered}
@@ -155,7 +158,10 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
           value={name}
           setValue={(v) => {
             setName(v);
-            onChange({ name: v, quantity: parseInt(quantity), units }, idx - 1);
+            onChange(
+              { name: v, quantity: parseFloat(quantity), units },
+              idx - 1
+            );
           }}
           label="name"
           id={ing.name + ing.quantity + ing.units + 3}
