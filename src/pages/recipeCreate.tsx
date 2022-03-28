@@ -46,7 +46,6 @@ export default function RecipeCreate() {
       alert("please add steps for the recipe");
       return;
     }
-    console.log(recipe);
     await safeMutation(client, makePost, recipe, image);
     navigate(`/feed`);
   };

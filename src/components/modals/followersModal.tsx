@@ -3,11 +3,11 @@ import { Transition, Dialog } from "@headlessui/react";
 import { useRef, useState } from "react";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { apiUrl } from "../constants";
-import User from "../interfaces/user";
-import { safeMutation } from "../utils/fetchUtils";
-import { ButtonPrimary } from "./buttonPrimary";
-import { ButtonSecondary } from "./buttonSecondary";
+import { apiUrl } from "../../constants";
+import User from "../../interfaces/user";
+import { safeMutation } from "../../utils/fetchUtils";
+import { ButtonPrimary } from "../buttonPrimary";
+import { ButtonSecondary } from "../buttonSecondary";
 
 interface Props {
   currentUser: User;

@@ -1,10 +1,10 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { useRef, useState } from "react";
-import Ingredient from "../interfaces/Ingredient";
-import { TextField } from "./textField";
-import { units as available } from "../constants";
+import Ingredient from "../../interfaces/Ingredient";
+import { TextField } from "../textField";
+import { units as available } from "../../constants";
 import { MdCancel, MdKeyboardBackspace } from "react-icons/md";
-import { ButtonPrimary } from "./buttonPrimary";
+import { ButtonPrimary } from "../buttonPrimary";
 
 interface Props {
   ingredients: Ingredient[];

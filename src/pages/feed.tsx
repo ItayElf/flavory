@@ -7,7 +7,7 @@ import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
 import { safeMutation, safeQuery } from "../utils/fetchUtils";
-import PostModal from "../components/postModal";
+import PostModal from "../components/modals/postModal";
 import { Link } from "react-router-dom";
 
 const pageSize = 20;

@@ -12,9 +12,9 @@ import { ButtonPrimary } from "../components/buttonPrimary";
 import { ButtonSecondary } from "../components/buttonSecondary";
 import { PostPreview } from "../interfaces/post";
 import PostCard from "../components/postCard";
-import PostModal from "../components/postModal";
+import PostModal from "../components/modals/postModal";
 import { safeMutation } from "../utils/fetchUtils";
-import { FollowersModal } from "../components/followersModal";
+import { FollowersModal } from "../components/modals/followersModal";
 
 const query = (name: string) => gql`
 {

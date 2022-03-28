@@ -15,7 +15,8 @@ import {
   MdEdit,
 } from "react-icons/md";
 import { NotFound } from "../components/notFound";
-import { scale } from "../utils/recipeUtils";
+import ScaleModal from "../components/modals/scaleModal";
+import { scaleRecipe } from "../utils/recipeUtils";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -36,7 +37,9 @@ const recipeQuery = (idx: number) => gql`
 }`;
 
 export default function RecipeView() {
+  const [original, setOriginal] = useState<Recipe | undefined | null>(null);
   const [recipe, setRecipe] = useState<Recipe | undefined | null>(null);
+  const [isScale, setIsScale] = useState(false);
   const client = useApolloClient();
   const navigate = useNavigate();
   const { id: encoded } = useParams();
@@ -46,26 +49,24 @@ export default function RecipeView() {
 
   useEffect(() => {
     const getRecipe = async () => {
-      console.log("here");
       try {
         const res = await client.query({
           query: recipeQuery(id),
           fetchPolicy: "no-cache",
         });
-        const r = res.data.recipe;
-        console.log(r);
-        console.log(scale(r, 2));
         setRecipe(res.data.recipe);
+        setOriginal({ ...res.data.recipe });
       } catch (e) {
         setRecipe(undefined);
+        setOriginal(undefined);
       }
     };
     getRecipe();
   }, [client, id]);
 
-  if (recipe === null) {
+  if (recipe === null || original === null) {
     return <Loading className="h-screen w-screen" />;
-  } else if (recipe === undefined) {
+  } else if (recipe === undefined || original === undefined) {
     return <NotFound className="h-screen" />;
   }
   return (
@@ -78,6 +79,7 @@ export default function RecipeView() {
             enableBackground="new 0 0 24 24"
             viewBox="0 0 24 24"
             className="h-8 w-8 cursor-pointer text-primary-600"
+            onClick={() => setIsScale(true)}
           >
             <g>
               <path
@@ -102,6 +104,14 @@ export default function RecipeView() {
         <main className="bg-white p-10 shadow shadow-primary-200 sm:my-9">
           <RecipeContent recipe={recipe} />
         </main>
+        <ScaleModal
+          onClose={(val) => {
+            setIsScale(false);
+            val && setRecipe(scaleRecipe(original, val));
+          }}
+          isOpen={isScale}
+          servings={original.servings}
+        />
       </div>
     </>
   );

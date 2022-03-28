@@ -1,13 +1,24 @@
 import Recipe from "../interfaces/Recipe";
 
-export const scale = (recipe: Recipe, factor: number) => {
-  recipe.ingredients = recipe.ingredients.map((v) => {
+export const scaleRecipe = (recipe: Recipe, factor: number) => {
+  const newRecipe = { ...recipe };
+  newRecipe.ingredients = newRecipe.ingredients.map((v) => {
     return { ...v, quantity: v.quantity * factor };
   });
-  if (recipe.servings === undefined || recipe.servings === null) {
-    return recipe;
+  newRecipe.servings = scaleString(newRecipe.servings, factor);
+
+  return newRecipe;
+};
+
+export const scaleString = (
+  value: string | null | undefined,
+  factor: number
+) => {
+  if (!value) {
+    return value;
   }
-  const nums = [...recipe.servings.matchAll(/\d+?/g)].reduce((obj, x) => {
+  // @ts-ignore
+  const nums = [...value.matchAll(/\d+?/g)].reduce((obj, x) => {
     obj[x[0]] = parseInt(x[0]) * factor;
     return obj;
   }, {});
@@ -16,11 +27,10 @@ export const scale = (recipe: Recipe, factor: number) => {
   );
   keys.forEach(
     (k) =>
-      (recipe.servings = recipe.servings?.replace(
+      (value = value?.replace(
         k,
         nums[k] % 1 ? nums[k] + "" : parseInt(nums[k]) + ""
       ))
   );
-
-  return recipe;
+  return value;
 };

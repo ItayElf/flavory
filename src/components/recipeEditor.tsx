@@ -17,8 +17,8 @@ import {
   MdPhoto,
   MdImageNotSupported,
 } from "react-icons/md";
-import { IngredientsModal } from "./ingredientsModal";
-import { StepsModal } from "./stepsModal";
+import { IngredientsModal } from "./modals/ingredientsModal";
+import { StepsModal } from "./modals/stepsModal";
 
 interface Props {
   recipe?: Recipe;

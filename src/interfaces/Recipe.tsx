@@ -6,7 +6,7 @@ export default interface Recipe {
   title: string;
   description: string;
   steps: string[];
-  cookingTime?: number;
+  cookingTime?: number | null;
   servings?: string | null;
   ingredients: Ingredient[];
 }
@@ -14,7 +14,7 @@ export default interface Recipe {
 export interface RecipePreview {
   title: string;
   description: string;
-  cookingTime?: number;
-  servings?: string;
+  cookingTime?: number | null;
+  servings?: string | null;
   idx: number;
 }

@@ -1,13 +1,13 @@
-import { PostPreview } from "../interfaces/post";
+import { PostPreview } from "../../interfaces/post";
 import { Dialog } from "@headlessui/react";
 import { MdOutlineComment, MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
 import { FormEvent, useRef, useState } from "react";
-import Comment from "../interfaces/comment";
-import { apiUrl } from "../constants";
-import { timeSince } from "../utils/formatUtils";
-import { safeMutation } from "../utils/fetchUtils";
+import Comment from "../../interfaces/comment";
+import { apiUrl } from "../../constants";
+import { timeSince } from "../../utils/formatUtils";
+import { safeMutation } from "../../utils/fetchUtils";
 
 interface Props {
   post: PostPreview | null;

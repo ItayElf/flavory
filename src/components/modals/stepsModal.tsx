@@ -1,8 +1,8 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { useRef, useState } from "react";
 import { MdCancel, MdKeyboardBackspace } from "react-icons/md";
-import { ButtonPrimary } from "./buttonPrimary";
-import { TextField } from "./textField";
+import { ButtonPrimary } from "../buttonPrimary";
+import { TextField } from "../textField";
 
 interface Props {
   steps: string[];
