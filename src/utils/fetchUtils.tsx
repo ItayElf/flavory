@@ -47,8 +47,8 @@ export const safeMutation = async (
     });
   } catch (e) {
     if (
-      e + "" === "Error: Signature has expired" ||
-      e + "" === "Error: Not enough segments"
+      (e + "").includes("Error: Signature has expired") ||
+      (e + "").includes("Error: Not enough segments")
     ) {
       const token = await loadAccessToken(client);
       return await client.mutate({ mutation: mutation(token, ...args) });

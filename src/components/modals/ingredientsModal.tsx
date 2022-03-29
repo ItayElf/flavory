@@ -1,9 +1,9 @@
-import { Transition, Dialog } from "@headlessui/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Ingredient from "../../interfaces/Ingredient";
 import { TextField } from "../textField";
 import { MdCancel, MdKeyboardBackspace } from "react-icons/md";
 import { ButtonPrimary } from "../buttonPrimary";
+import ModalWrapper from "./modalWrapper";
 
 interface Props {
   ingredients: Ingredient[];
@@ -17,84 +17,63 @@ export function IngredientsModal({
   onClose,
 }: Props) {
   const [ingredients, setIngredients] = useState([...ings]);
-  const focus = useRef(null);
 
   const valids = ingredients.filter(
     (i) => i.name !== "" && !isNaN(i.quantity) && i.quantity > 0
   );
 
   return (
-    <Transition
-      show={isOpen}
-      enter="transition duration-100 ease-out"
-      enterFrom="transform scale-95 opacity-0"
-      enterTo="transform scale-100 opacity-100"
-      leave="transition duration-75 ease-out"
-      leaveFrom="transform scale-100 opacity-100"
-      leaveTo="transform scale-95 opacity-0"
+    <ModalWrapper
+      isOpen={isOpen}
+      onClose={() => {
+        onClose(valids);
+        setIngredients(valids);
+      }}
+      className="h-full w-screen sm:mx-auto sm:h-auto sm:min-w-[640px] sm:max-w-[960px]"
+      wrapperClassName="items-baseline justify-start"
     >
-      <Dialog
-        as="div"
-        onClose={() => {
-          onClose(valids);
-          setIngredients(valids);
-        }}
-        className="fixed inset-0 h-full w-full overflow-y-auto sm:m-4"
-        initialFocus={focus}
-      >
-        <Dialog.Overlay
-          className="fixed inset-0 bg-black/75"
-          onClick={() => {
-            onClose(valids);
-            setIngredients(valids);
-          }}
-        />
-        <button className="hidden" ref={focus}></button>
-        <div className="relative flex h-full w-screen flex-col overflow-y-auto rounded border-2 border-primary-600 bg-white sm:mx-auto sm:h-auto sm:min-w-[640px] sm:max-w-[960px]">
-          <div className="w-full p-4">
-            <div className="flex">
-              <MdKeyboardBackspace
-                className="h-10 w-10 sm:hidden"
-                onClick={() => onClose(ingredients)}
-              />
-              <h1 className="h4 sm:h3 w-full text-center underline decoration-primary-600">
-                Ingredients
-              </h1>
-              <div className="h-10 w-10 sm:hidden" />
-            </div>
-
-            <div className="mt-10 w-full space-y-6">
-              {ingredients.map((ing, idx) => (
-                <IngTile
-                  key={idx}
-                  ing={ing}
-                  idx={idx + 1}
-                  onDelete={(ing) =>
-                    setIngredients(ingredients.filter((i) => i !== ing))
-                  }
-                  onChange={(ing, idx) =>
-                    setIngredients(
-                      ingredients.map((i, id) => (id === idx ? ing : i))
-                    )
-                  }
-                />
-              ))}
-              <ButtonPrimary
-                className="w-full"
-                onClick={() =>
-                  setIngredients([
-                    ...ingredients,
-                    { name: "", units: "", quantity: NaN },
-                  ])
-                }
-              >
-                Add Ingredient
-              </ButtonPrimary>
-            </div>
-          </div>
+      <div className="w-full p-4">
+        <div className="flex">
+          <MdKeyboardBackspace
+            className="h-10 w-10 sm:hidden"
+            onClick={() => onClose(ingredients)}
+          />
+          <h1 className="h4 sm:h3 w-full text-center underline decoration-primary-600">
+            Ingredients
+          </h1>
+          <div className="h-10 w-10 sm:hidden" />
         </div>
-      </Dialog>
-    </Transition>
+
+        <div className="mt-10 w-full space-y-6">
+          {ingredients.map((ing, idx) => (
+            <IngTile
+              key={idx}
+              ing={ing}
+              idx={idx + 1}
+              onDelete={(ing) =>
+                setIngredients(ingredients.filter((i) => i !== ing))
+              }
+              onChange={(ing, idx) =>
+                setIngredients(
+                  ingredients.map((i, id) => (id === idx ? ing : i))
+                )
+              }
+            />
+          ))}
+          <ButtonPrimary
+            className="w-full"
+            onClick={() =>
+              setIngredients([
+                ...ingredients,
+                { name: "", units: "", quantity: NaN },
+              ])
+            }
+          >
+            Add Ingredient
+          </ButtonPrimary>
+        </div>
+      </div>
+    </ModalWrapper>
   );
 }
 

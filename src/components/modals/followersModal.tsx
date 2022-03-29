@@ -1,6 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Transition, Dialog } from "@headlessui/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "../../constants";
@@ -8,6 +7,7 @@ import User from "../../interfaces/user";
 import { safeMutation } from "../../utils/fetchUtils";
 import { ButtonPrimary } from "../buttonPrimary";
 import { ButtonSecondary } from "../buttonSecondary";
+import ModalWrapper from "./modalWrapper";
 
 interface Props {
   currentUser: User;
@@ -25,66 +25,46 @@ export function FollowersModal({
   title,
 }: Props) {
   const [userFollows, setUserFollows] = useState([...currentUser.following]);
-  const focus = useRef(null);
   return (
-    <Transition
-      show={isOpen}
-      enter="transition duration-100 ease-out"
-      enterFrom="transform scale-95 opacity-0"
-      enterTo="transform scale-100 opacity-100"
-      leave="transition duration-75 ease-out"
-      leaveFrom="transform scale-100 opacity-100"
-      leaveTo="transform scale-95 opacity-0"
+    <ModalWrapper
+      isOpen={isOpen}
+      onClose={onClose}
+      wrapperClassName="justify-start items-baseline"
+      className="h-full w-screen sm:mx-auto sm:h-auto sm:max-h-[70vh] sm:max-w-[480px]"
     >
-      <Dialog
-        as="div"
-        onClose={() => onClose()}
-        className="fixed inset-0 h-full w-full overflow-y-auto sm:m-4"
-        initialFocus={focus}
-      >
-        <Dialog.Overlay
-          className="fixed inset-0 bg-black/75"
-          onClick={() => {
-            onClose();
-          }}
-        />
-        <button className="hidden" ref={focus}></button>
-        <div className="relative flex h-full w-screen flex-col overflow-y-auto rounded border-2 border-primary-600 bg-white sm:mx-auto sm:h-auto sm:max-h-[70vh] sm:max-w-[480px]">
-          <div className="w-full p-4">
-            <div className="flex">
-              <MdKeyboardBackspace
-                className="h-10 w-10 sm:hidden"
-                onClick={() => onClose()}
-              />
-              <h1 className="h4 sm:h3 w-full text-center underline decoration-primary-600">
-                {title}
-              </h1>
+      <div className="w-full p-4">
+        <div className="flex">
+          <MdKeyboardBackspace
+            className="h-10 w-10 sm:hidden"
+            onClick={() => onClose()}
+          />
+          <h1 className="h4 sm:h3 w-full text-center underline decoration-primary-600">
+            {title}
+          </h1>
 
-              <div className="h-10 w-10 sm:hidden" />
-            </div>
-            <div className="mt-8 flex flex-col space-y-4">
-              {followers.map((n, i) => (
-                <FollowTile
-                  key={i}
-                  onClose={onClose}
-                  name={n}
-                  following={
-                    n === currentUser.name ? undefined : userFollows.includes(n)
-                  }
-                  onFollow={(val) => {
-                    if (val) {
-                      setUserFollows([...userFollows, n]);
-                    } else {
-                      setUserFollows(userFollows.filter((name) => name !== n));
-                    }
-                  }}
-                />
-              ))}
-            </div>
-          </div>
+          <div className="h-10 w-10 sm:hidden" />
         </div>
-      </Dialog>
-    </Transition>
+        <div className="mt-8 flex flex-col space-y-4">
+          {followers.map((n, i) => (
+            <FollowTile
+              key={i}
+              onClose={onClose}
+              name={n}
+              following={
+                n === currentUser.name ? undefined : userFollows.includes(n)
+              }
+              onFollow={(val) => {
+                if (val) {
+                  setUserFollows([...userFollows, n]);
+                } else {
+                  setUserFollows(userFollows.filter((name) => name !== n));
+                }
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </ModalWrapper>
   );
 }
 

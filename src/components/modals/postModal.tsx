@@ -1,13 +1,13 @@
 import { PostPreview } from "../../interfaces/post";
-import { Dialog } from "@headlessui/react";
 import { MdOutlineComment, MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import Comment from "../../interfaces/comment";
 import { apiUrl } from "../../constants";
 import { timeSince } from "../../utils/formatUtils";
 import { safeMutation } from "../../utils/fetchUtils";
+import ModalWrapper from "./modalWrapper";
 
 interface Props {
   post: PostPreview | null;
@@ -30,7 +30,6 @@ export default function PostModal({ post, onClose }: Props) {
   const [comment, setComment] = useState("");
   const map = new Map<number, Comment[]>();
   const [sentComments, setSentComments] = useState(map);
-  const focus = useRef(null);
   const client = useApolloClient();
 
   const shownComments = [
@@ -54,56 +53,49 @@ export default function PostModal({ post, onClose }: Props) {
   };
 
   return (
-    <Dialog
-      as="div"
-      open={!!post}
+    <ModalWrapper
+      isOpen={!!post}
       onClose={onClose}
-      className="fixed inset-0 h-full w-full overflow-y-auto sm:m-4"
-      initialFocus={focus}
+      className="h-full w-screen sm:m-auto sm:h-2/3 sm:w-[480px]"
     >
-      <Dialog.Overlay className="fixed inset-0 bg-black/75" onClick={onClose} />
-      <button className="hidden" ref={focus}></button>
-
-      <div className="relative h-full w-screen overflow-hidden rounded border-2 border-primary-600 bg-white sm:m-auto sm:h-2/3 sm:w-[480px]">
-        <div className="flex h-full flex-col">
-          <div className="h5 sm:h4 flex h-16 w-full items-center bg-white pl-2 shadow shadow-primary-50">
-            <MdKeyboardBackspace
-              className="mr-2 h-8 w-8 cursor-pointer sm:hidden"
-              onClick={onClose}
-            />
-            <h1>Comments</h1>
-          </div>
-          <div className="h-full w-full space-y-4 overflow-y-auto bg-[#fafafa] p-4">
-            {shownComments.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center">
-                <MdOutlineComment className="h-16 w-16" />
-                <h2 className="h5 text-center">This post has no comments.</h2>
-                <p className="h6 text-center text-gray">
-                  Be the first one to comment on this post!
-                </p>
-              </div>
-            ) : (
-              shownComments.map((c, i) => (
-                <CommentTile c={c} post={post!} key={i} onClose={onClose} />
-              ))
-            )}
-          </div>
-          <form
-            className="flex h-20 w-full justify-between space-x-2 bg-white py-2 px-4"
-            onSubmit={submit}
-          >
-            <input
-              type="text"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="h6 w-full rounded border-none bg-primary-200 placeholder:text-gray focus:ring-0 focus:ring-offset-0"
-              placeholder="Comment"
-            />
-            <button className="h6 text-primary-900">Post</button>
-          </form>
+      <div className="flex h-full flex-col">
+        <div className="h5 sm:h4 flex h-16 w-full items-center bg-white pl-2 shadow shadow-primary-50">
+          <MdKeyboardBackspace
+            className="mr-2 h-8 w-8 cursor-pointer sm:hidden"
+            onClick={onClose}
+          />
+          <h1>Comments</h1>
         </div>
+        <div className="h-full w-full space-y-4 overflow-y-auto bg-[#fafafa] p-4">
+          {shownComments.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center">
+              <MdOutlineComment className="h-16 w-16" />
+              <h2 className="h5 text-center">This post has no comments.</h2>
+              <p className="h6 text-center text-gray">
+                Be the first one to comment on this post!
+              </p>
+            </div>
+          ) : (
+            shownComments.map((c, i) => (
+              <CommentTile c={c} post={post!} key={i} onClose={onClose} />
+            ))
+          )}
+        </div>
+        <form
+          className="flex h-20 w-full justify-between space-x-2 bg-white py-2 px-4"
+          onSubmit={submit}
+        >
+          <input
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="h6 w-full rounded border-none bg-primary-200 placeholder:text-gray focus:ring-0 focus:ring-offset-0"
+            placeholder="Comment"
+          />
+          <button className="h6 text-primary-900">Post</button>
+        </form>
       </div>
-    </Dialog>
+    </ModalWrapper>
   );
 }
 
