@@ -16,7 +16,7 @@ import {
 } from "react-icons/md";
 import { NotFound } from "../components/notFound";
 import ScaleModal from "../components/modals/scaleModal";
-import { scaleRecipe } from "../utils/recipeUtils";
+import { convertDegrees, scaleRecipe } from "../utils/recipeUtils";
 import Tooltip from "../components/tooltip";
 
 const recipeQuery = (idx: number) => gql`
@@ -70,6 +70,7 @@ export default function RecipeView() {
   } else if (recipe === undefined || original === undefined) {
     return <NotFound className="h-screen" />;
   }
+  console.log(convertDegrees(recipe, false));
   return (
     <>
       <Header user={user} contentStyle="w-full sm:w-[858px]" />

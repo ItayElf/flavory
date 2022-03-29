@@ -67,3 +67,43 @@ export const convertIngredient = (ing: Ingredient, to: string) => {
     quantity: amount,
   } as Ingredient;
 };
+
+export const convertDegrees = (recipe: Recipe, toCelsius: boolean) => {
+  const regexes = toCelsius
+    ? {
+        F: [/(\d+?)[ ]?F\b/g, "C"],
+        f: [/(\d+?)[ ]?f\b/g, "c"],
+        fahrenheit: [/(\d+?)[ ]?fahrenheit\b/g, "celsius"],
+        Fahrenheit: [/(\d+?)[ ]?Fahrenheit\b/g, "Celsius"],
+        degrees: [/(\d+?)[ ]?degrees\b/g, "degrees"],
+        Degrees: [/(\d+?)[ ]?Degrees\b/g, "Degrees"],
+      }
+    : {
+        C: [/(\d+?)[ ]?C\b/g, "F"],
+        c: [/(\d+?)[ ]?c\b/g, "f"],
+        celsius: [/(\d+?)[ ]?celsius\b/g, "fahrenheit"],
+        Celsius: [/(\d+?)[ ]?Celsius\b/g, "Fahrenheit"],
+        degrees: [/(\d+?)[ ]?degrees\b/g, "degrees"],
+        Degrees: [/(\d+?)[ ]?Degrees\b/g, "Degrees"],
+      };
+
+  const steps: string[] = [];
+  recipe.steps.forEach((s) => {
+    let step = s;
+    Object.keys(regexes).forEach((k) => {
+      // @ts-ignore
+      [...s.matchAll(regexes[k][0])].forEach((arr) => {
+        const val = parseInt(arr[1]);
+        const calc = Math.round(
+          toCelsius ? ((val - 32) * 5) / 9 : (val * 9) / 5 + 32
+        );
+        step = step.replace(
+          arr[0],
+          arr[0].replace(k, regexes[k][1]).replace(val + "", calc + "")
+        );
+      });
+    });
+    steps.push(step);
+  });
+  return steps;
+};

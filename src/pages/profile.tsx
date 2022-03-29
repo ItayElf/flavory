@@ -95,12 +95,13 @@ export default function Profile() {
   const { name } = useParams();
   const client = useApolloClient();
   const owner = name === currentUser?.name;
-
+  console.log({ user, currentUser, following });
   useEffect(() => {
     async function getData() {
       try {
         const res = await client.query({ query: query(name ?? "") });
         setUser(res.data.user);
+        setFollowing(res.data.user.followers.includes(currentUser?.name));
         setPosts(res.data.postsOf);
       } catch (e) {
         setUser(undefined);
@@ -109,7 +110,7 @@ export default function Profile() {
     getData();
     setTab(0);
     window.scrollTo(0, 0);
-  }, [client, name]);
+  }, [client, name, currentUser?.name]);
 
   const onClick = async () => {
     if (!user || !currentUser) {
