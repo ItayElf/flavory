@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { apiUrl } from "../constants";
 import { Menu, Transition } from "@headlessui/react";
 import User from "../interfaces/user";
+import Tooltip from "./tooltip";
 
 interface Props {
   user?: User;
@@ -42,10 +43,14 @@ export function Header({ contentStyle, user }: Props) {
         </div>
         {user ? (
           <div className="flex items-center">
-            <MdOutlineExplore className="mr-6 h-7 w-7" />
-            <Link to={"/recipe/post"}>
-              <MdOutlineAddBox className="mr-6 h-7 w-7 cursor-pointer" />
-            </Link>
+            <Tooltip title="Explore">
+              <MdOutlineExplore className="mr-6 h-7 w-7" />
+            </Tooltip>
+            <Tooltip title="Create Post">
+              <Link to={"/recipe/post"}>
+                <MdOutlineAddBox className="mr-6 h-7 w-7 cursor-pointer" />
+              </Link>
+            </Tooltip>
 
             <ProfileMenu user={user} />
           </div>
