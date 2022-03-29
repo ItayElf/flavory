@@ -188,7 +188,11 @@ const ConvertSection: React.FC<Props2> = ({ title, ings, pool, onConvert }) => {
           )}
         </>
       ) : (
-        <></>
+        <>
+          <p className="s1 mt-2 text-gray">
+            There are no ingredients with {title.toLocaleLowerCase()} units.
+          </p>
+        </>
       )}
     </div>
   );

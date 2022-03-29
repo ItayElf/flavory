@@ -55,7 +55,7 @@ export const convertIngredient = (ing: Ingredient, to: string) => {
   const isVolume = Object.keys(volumeUnits).includes(ing.units);
   const pool = isVolume ? volumeUnits : weightUnits;
   const amount =
-    Math.round((ing.quantity * pool[ing.units] * 100) / pool[to]) / 100;
+    Math.round((ing.quantity * pool[ing.units] * 1000) / pool[to]) / 1000;
   if (isNaN(amount)) {
     throw Error(
       `Units mismatch! ing is ${ing.units} cannot be converted to ${to}`

@@ -56,7 +56,7 @@ export const formatQuantity = (quantity: number) => {
   const gcd = (a: number, b: number) => (b ? gcd(b, a % b) : a);
 
   const unit = Math.floor(quantity);
-  quantity = Math.round((quantity - unit) * 100) / 100;
+  quantity = Math.round((quantity - unit) * 1000) / 1000;
   if (quantity === 0) {
     return unit + "";
   }
@@ -64,7 +64,7 @@ export const formatQuantity = (quantity: number) => {
   const bottom = Math.pow(10, topString.length);
   const top = parseInt(topString);
   const x = gcd(top, bottom);
-  return `${unit === 0 ? "" : unit}${getFraction(top / x, bottom / x, unit)}`;
+  return getFraction(top / x, bottom / x, unit);
 };
 
 //TODO: support more fractions
@@ -94,7 +94,8 @@ const getFraction = (top: number, bottom: number, unit: number) => {
   };
   const value = remainder[`${top}/${bottom}`];
   if (value) {
-    return " " + value;
+    return `${unit} ${value}`;
   }
-  return unit + top / bottom + "";
+  console.log(unit, top, bottom, unit + top / bottom);
+  return (unit + top / bottom).toString();
 };
