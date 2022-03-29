@@ -10,6 +10,7 @@ import { Header } from "../components/header";
 import { safeMutation } from "../utils/fetchUtils";
 import { escape } from "../utils/fetchUtils";
 import React from "react";
+import useTitle from "../hooks/useTitle";
 
 const RecipeEditor = React.lazy(() => import("../components/recipeEditor"));
 
@@ -59,6 +60,8 @@ export default function RecipeEdit() {
   const navigate = useNavigate();
   const user = useCurrentUser(true);
   const owner = user ? user.posts.indexOf(id) !== -1 : false;
+
+  useTitle(`Edit ${recipe?.title ?? "Recipe"}`);
 
   useEffect(() => {
     const getRecipe = async () => {

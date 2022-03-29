@@ -5,6 +5,7 @@ import { TextField } from "../components/textField";
 import { Link } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
 import globals from "../globals";
+import useTitle from "../hooks/useTitle";
 
 interface Props {
   signIn: boolean;
@@ -35,6 +36,8 @@ export default function Auth({ signIn }: Props) {
   const [error, setError] = useState("");
   const client = useApolloClient();
   const navigate = useNavigate();
+
+  useTitle("Flavory - " + signIn ? "Sign In" : "Sign Up");
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

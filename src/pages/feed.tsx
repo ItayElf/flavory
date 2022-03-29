@@ -9,6 +9,7 @@ import { apiUrl } from "../constants";
 import { safeMutation, safeQuery } from "../utils/fetchUtils";
 import PostModal from "../components/modals/postModal";
 import { Link } from "react-router-dom";
+import useTitle from "../hooks/useTitle";
 
 const pageSize = 20;
 
@@ -170,6 +171,8 @@ function SuggestionTile({ apiUrl, u, client }: Props2) {
     await safeMutation(client, mutation, u.suggested, !followed);
     setfollowed(!followed);
   };
+
+  useTitle("Flavory");
 
   return (
     <div className="flex justify-between">

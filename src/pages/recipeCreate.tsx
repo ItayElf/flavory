@@ -6,6 +6,7 @@ import Recipe from "../interfaces/Recipe";
 import { escape, safeMutation } from "../utils/fetchUtils";
 import React, { Suspense } from "react";
 import Loading from "../components/loading";
+import useTitle from "../hooks/useTitle";
 
 const RecipeEditor = React.lazy(() => import("../components/recipeEditor"));
 
@@ -34,6 +35,8 @@ export default function RecipeCreate() {
   const user = useCurrentUser(true);
   const client = useApolloClient();
   const navigate = useNavigate();
+
+  useTitle("Create Post");
 
   const save = async (recipe: Recipe, image: string | null) => {
     if (!recipe.title) {

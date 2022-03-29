@@ -19,6 +19,7 @@ import ScaleModal from "../components/modals/scaleModal";
 import { scaleRecipe } from "../utils/recipeUtils";
 import Tooltip from "../components/tooltip";
 import ConvertModal from "../components/modals/convertModal";
+import useTitle from "../hooks/useTitle";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -49,6 +50,8 @@ export default function RecipeView() {
   const id = (new Hashids().decode(encoded ?? "")[0] as number) ?? -1;
   const user = useCurrentUser(false);
   const owner = user ? user.posts.indexOf(id) !== -1 : false;
+
+  useTitle(recipe?.title ?? "View Recipe");
 
   useEffect(() => {
     const getRecipe = async () => {

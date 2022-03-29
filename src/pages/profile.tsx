@@ -15,6 +15,7 @@ import PostCard from "../components/postCard";
 import PostModal from "../components/modals/postModal";
 import { safeMutation } from "../utils/fetchUtils";
 import { FollowersModal } from "../components/modals/followersModal";
+import useTitle from "../hooks/useTitle";
 
 const query = (name: string) => gql`
 {
@@ -95,7 +96,9 @@ export default function Profile() {
   const { name } = useParams();
   const client = useApolloClient();
   const owner = name === currentUser?.name;
-  console.log({ user, currentUser, following });
+
+  useTitle(name ?? "Profile");
+
   useEffect(() => {
     async function getData() {
       try {
