@@ -14,12 +14,29 @@ export const volumeUnits = {
   floz: 29.573,
 };
 
+export const convertableVolume = {
+  milliliters: 1,
+  liters: 1000,
+  tbsp: 14.786,
+  tsp: 4.928,
+  cups: 240,
+  pints: 473.176,
+  floz: 29.573,
+};
+
 export const weightUnits = {
   gram: 1,
   grams: 1,
   kg: 1000,
   kgs: 1000,
   lb: 453.592,
+  lbs: 453.592,
+  oz: 28.349,
+};
+
+export const convertableWeight = {
+  grams: 1,
+  kgs: 1000,
   lbs: 453.592,
   oz: 28.349,
 };

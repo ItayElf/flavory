@@ -64,11 +64,11 @@ export const formatQuantity = (quantity: number) => {
   const bottom = Math.pow(10, topString.length);
   const top = parseInt(topString);
   const x = gcd(top, bottom);
-  return `${unit === 0 ? "" : unit + " "}${getFraction(top / x, bottom / x)}`;
+  return `${unit === 0 ? "" : unit}${getFraction(top / x, bottom / x, unit)}`;
 };
 
 //TODO: support more fractions
-const getFraction = (top: number, bottom: number) => {
+const getFraction = (top: number, bottom: number, unit: number) => {
   const remainder = {
     "1/2": "½",
     "1/3": "⅓",
@@ -92,5 +92,9 @@ const getFraction = (top: number, bottom: number) => {
     "1/9": "⅑",
     "1/10": "⅒",
   };
-  return remainder[`${top}/${bottom}`] ?? `${top}/${bottom}`;
+  const value = remainder[`${top}/${bottom}`];
+  if (value) {
+    return " " + value;
+  }
+  return unit + top / bottom + "";
 };

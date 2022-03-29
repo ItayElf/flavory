@@ -37,12 +37,12 @@ export const scaleString = (
   return value;
 };
 
-export const getConvertable = (recipe: Recipe) => {
+export const getConvertable = (ings: Ingredient[]) => {
   return {
-    volume: recipe.ingredients.filter((i) =>
+    volume: ings.filter((i) =>
       Object.keys(volumeUnits).includes(i.units.toLowerCase())
     ),
-    weight: recipe.ingredients.filter((i) =>
+    weight: ings.filter((i) =>
       Object.keys(weightUnits).includes(i.units.toLowerCase())
     ),
   };
@@ -68,27 +68,27 @@ export const convertIngredient = (ing: Ingredient, to: string) => {
   } as Ingredient;
 };
 
-export const convertDegrees = (recipe: Recipe, toCelsius: boolean) => {
+export const convertDegrees = (originalSteps: string[], toCelsius: boolean) => {
   const regexes = toCelsius
     ? {
         F: [/(\d+?)[ ]?F\b/g, "C"],
         f: [/(\d+?)[ ]?f\b/g, "c"],
         fahrenheit: [/(\d+?)[ ]?fahrenheit\b/g, "celsius"],
         Fahrenheit: [/(\d+?)[ ]?Fahrenheit\b/g, "Celsius"],
-        degrees: [/(\d+?)[ ]?degrees\b/g, "degrees"],
-        Degrees: [/(\d+?)[ ]?Degrees\b/g, "Degrees"],
+        degrees: [/(\d+?)[ ]?degrees\b/g, "celsius"],
+        Degrees: [/(\d+?)[ ]?Degrees\b/g, "Celsius"],
       }
     : {
         C: [/(\d+?)[ ]?C\b/g, "F"],
         c: [/(\d+?)[ ]?c\b/g, "f"],
         celsius: [/(\d+?)[ ]?celsius\b/g, "fahrenheit"],
         Celsius: [/(\d+?)[ ]?Celsius\b/g, "Fahrenheit"],
-        degrees: [/(\d+?)[ ]?degrees\b/g, "degrees"],
-        Degrees: [/(\d+?)[ ]?Degrees\b/g, "Degrees"],
+        degrees: [/(\d+?)[ ]?degrees\b/g, "fahrenheit"],
+        Degrees: [/(\d+?)[ ]?Degrees\b/g, "Fahrenheit"],
       };
 
   const steps: string[] = [];
-  recipe.steps.forEach((s) => {
+  originalSteps.forEach((s) => {
     let step = s;
     Object.keys(regexes).forEach((k) => {
       // @ts-ignore

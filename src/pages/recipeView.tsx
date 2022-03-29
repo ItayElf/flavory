@@ -16,8 +16,9 @@ import {
 } from "react-icons/md";
 import { NotFound } from "../components/notFound";
 import ScaleModal from "../components/modals/scaleModal";
-import { convertDegrees, scaleRecipe } from "../utils/recipeUtils";
+import { scaleRecipe } from "../utils/recipeUtils";
 import Tooltip from "../components/tooltip";
+import ConvertModal from "../components/modals/convertModal";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -41,6 +42,7 @@ export default function RecipeView() {
   const [original, setOriginal] = useState<Recipe | undefined | null>(null);
   const [recipe, setRecipe] = useState<Recipe | undefined | null>(null);
   const [isScale, setIsScale] = useState(false);
+  const [isConvert, setIsConvert] = useState(false);
   const client = useApolloClient();
   const navigate = useNavigate();
   const { id: encoded } = useParams();
@@ -70,7 +72,6 @@ export default function RecipeView() {
   } else if (recipe === undefined || original === undefined) {
     return <NotFound className="h-screen" />;
   }
-  console.log(convertDegrees(recipe, false));
   return (
     <>
       <Header user={user} contentStyle="w-full sm:w-[858px]" />
@@ -93,7 +94,10 @@ export default function RecipeView() {
             </svg>
           </Tooltip>
           <Tooltip title="Convert">
-            <MdSyncAlt className="h-8 w-8 cursor-pointer text-primary-600" />
+            <MdSyncAlt
+              className="h-8 w-8 cursor-pointer text-primary-600"
+              onClick={() => setIsConvert(true)}
+            />
           </Tooltip>
           <Tooltip title="Share">
             <MdShare className="h-8 w-8 cursor-pointer text-primary-600" />
@@ -125,6 +129,15 @@ export default function RecipeView() {
           }}
           isOpen={isScale}
           servings={original.servings}
+        />
+        <ConvertModal
+          isOpen={isConvert}
+          onClose={(ings, steps) => {
+            setIsConvert(false);
+            setRecipe({ ...recipe, ingredients: ings, steps });
+          }}
+          ingredients={recipe.ingredients}
+          steps={recipe.steps}
         />
       </div>
     </>
