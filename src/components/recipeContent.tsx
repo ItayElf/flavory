@@ -53,7 +53,7 @@ export default function RecipeContent({ recipe, image }: Props) {
           </div>
         )}
       </div>
-      <div className="mt-6 flex flex-col sm:flex-row">
+      <div className="mt-6 flex flex-col print:flex-row sm:flex-row">
         <div className="w-full sm:w-2/5">
           <h2 className="h4">Ingredients:</h2>
           <div className="mb-6 h-px w-4/5 bg-primary-300 "></div>
@@ -63,7 +63,7 @@ export default function RecipeContent({ recipe, image }: Props) {
             ))}
           </div>
         </div>
-        <div className="mt-6 w-full sm:ml-2 sm:mt-0 sm:w-3/5">
+        <div className="mt-6 w-full print:mt-0 sm:ml-2 sm:mt-0 sm:w-3/5">
           <h2 className="h4">Steps:</h2>
           <div className="mb-6 h-px w-4/5 bg-primary-300"></div>
           <div className="space-y-4">

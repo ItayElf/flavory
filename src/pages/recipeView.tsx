@@ -53,6 +53,10 @@ export default function RecipeView() {
 
   useTitle(recipe?.title ?? "View Recipe");
 
+  const print = () => {
+    window.print();
+  };
+
   useEffect(() => {
     const getRecipe = async () => {
       try {
@@ -78,8 +82,8 @@ export default function RecipeView() {
   return (
     <>
       <Header user={user} contentStyle="w-full sm:w-[858px]" />
-      <div className="mt-24 w-full sm:mx-auto sm:w-[856px]">
-        <div className="flex items-center justify-evenly bg-white py-2 sm:shadow sm:shadow-primary-200 ">
+      <div className="mt-24 w-full print:mt-0 sm:mx-auto sm:w-[856px]">
+        <div className="flex items-center justify-evenly bg-white py-2 print:hidden sm:shadow sm:shadow-primary-200">
           <Tooltip title="Scale">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +110,10 @@ export default function RecipeView() {
             <MdShare className="h-8 w-8 cursor-pointer text-primary-600" />
           </Tooltip>
           <Tooltip title="Print">
-            <MdPrint className="h-8 w-8 cursor-pointer text-primary-600" />
+            <MdPrint
+              className="h-8 w-8 cursor-pointer text-primary-600"
+              onClick={print}
+            />
           </Tooltip>
           <Tooltip title="Save to Cookbook">
             <MdOutlineBook className="h-8 w-8 cursor-pointer text-primary-600" />
@@ -122,7 +129,7 @@ export default function RecipeView() {
             </Tooltip>
           )}
         </div>
-        <main className="bg-white p-10 shadow shadow-primary-200 sm:my-9">
+        <main className="bg-white p-10 shadow shadow-primary-200 print:p-4 print:shadow-none sm:my-9">
           <RecipeContent recipe={recipe} />
         </main>
         <ScaleModal

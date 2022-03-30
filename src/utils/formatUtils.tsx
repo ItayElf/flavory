@@ -96,6 +96,5 @@ const getFraction = (top: number, bottom: number, unit: number) => {
   if (value) {
     return `${unit} ${value}`;
   }
-  console.log(unit, top, bottom, unit + top / bottom);
   return (unit + top / bottom).toString();
 };
