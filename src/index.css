@@ -36,7 +36,7 @@ body,
     @apply font-[sora] text-xl tracking-[0.15px];
   }
   .s1 {
-    @apply font-[sora] tracking-[0.15px];
+    @apply font-[sora] text-base tracking-[0.15px];
   }
   .s2 {
     @apply font-[sora] text-sm tracking-[0.1px];

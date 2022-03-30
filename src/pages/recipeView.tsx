@@ -20,6 +20,7 @@ import { scaleRecipe } from "../utils/recipeUtils";
 import Tooltip from "../components/tooltip";
 import ConvertModal from "../components/modals/convertModal";
 import useTitle from "../hooks/useTitle";
+import ShareModal from "../components/modals/shareModal";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -44,6 +45,7 @@ export default function RecipeView() {
   const [recipe, setRecipe] = useState<Recipe | undefined | null>(null);
   const [isScale, setIsScale] = useState(false);
   const [isConvert, setIsConvert] = useState(false);
+  const [isShare, setIsShare] = useState(false);
   const client = useApolloClient();
   const navigate = useNavigate();
   const { id: encoded } = useParams();
@@ -107,7 +109,10 @@ export default function RecipeView() {
             />
           </Tooltip>
           <Tooltip title="Share">
-            <MdShare className="h-8 w-8 cursor-pointer text-primary-600" />
+            <MdShare
+              className="h-8 w-8 cursor-pointer text-primary-600"
+              onClick={() => setIsShare(true)}
+            />
           </Tooltip>
           <Tooltip title="Print">
             <MdPrint
@@ -149,6 +154,7 @@ export default function RecipeView() {
           ingredients={recipe.ingredients}
           steps={recipe.steps}
         />
+        <ShareModal isOpen={isShare} onClose={() => setIsShare(false)} />
       </div>
     </>
   );
