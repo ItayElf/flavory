@@ -4,6 +4,7 @@ import {
   MdOutlineExplore,
   MdOutlineAddBox,
   MdPerson,
+  MdKeyboardBackspace,
 } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { apiUrl } from "../constants";
@@ -18,56 +19,80 @@ interface Props {
 
 export function Header({ contentStyle, user }: Props) {
   const [search, setSearch] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
 
   return (
     <div className="fixed top-0 flex h-16 w-full justify-center bg-white shadow-sm shadow-primary-200 print:hidden">
-      <div
-        className={
-          "flex h-full flex-row items-center justify-between px-2 sm:justify-evenly lg:justify-between" +
-          " " +
-          contentStyle
-        }
-      >
-        <Link to={"/feed"} className="h4">
-          Flavory
-        </Link>
-        <div className="hidden items-center rounded-md bg-primary-50 sm:flex sm:w-72 sm:justify-between lg:w-96">
-          <input
-            placeholder="Search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            type="text"
-            className="placeholder:h6 h6 w-full rounded-md border-none bg-inherit placeholder:text-gray focus:ring-0 focus:ring-offset-0"
-          />
-          <MdSearch className="mr-4 h-7 w-7 text-gray" />
-        </div>
-        {user ? (
-          <div className="flex items-center">
-            <Tooltip title="Explore">
-              <MdOutlineExplore className="mr-6 h-7 w-7" />
-            </Tooltip>
-            <Tooltip title="Create Post">
-              <Link to={"/recipe/post"}>
-                <MdOutlineAddBox className="mr-6 h-7 w-7 cursor-pointer" />
+      {!isSearch ? (
+        <div
+          className={`flex h-full flex-row items-center justify-between px-2 sm:justify-evenly lg:justify-between ${contentStyle}`}
+        >
+          <Link to={"/feed"} className="h4">
+            Flavory
+          </Link>
+          <div className="hidden items-center rounded-md bg-primary-50 sm:flex sm:w-72 sm:justify-between lg:w-96">
+            <input
+              placeholder="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              type="text"
+              className="placeholder:h6 h6 w-full rounded-md border-none bg-inherit placeholder:text-gray focus:ring-0 focus:ring-offset-0"
+            />
+            <MdSearch className="mr-4 h-7 w-7 text-gray" />
+          </div>
+          {user ? (
+            <div className="flex items-center">
+              <Tooltip title="Search">
+                <MdSearch
+                  className="mr-6 h-7 w-7 cursor-pointer sm:hidden"
+                  onClick={() => {
+                    setIsSearch(true);
+                    setSearch("");
+                  }}
+                />
+              </Tooltip>
+              <Tooltip title="Explore">
+                <MdOutlineExplore className="mr-6 h-7 w-7" />
+              </Tooltip>
+              <Tooltip title="Create Post">
+                <Link to={"/recipe/post"}>
+                  <MdOutlineAddBox className="mr-6 h-7 w-7 cursor-pointer" />
+                </Link>
+              </Tooltip>
+              <ProfileMenu user={user} />
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <Link to={"/signIn"} className="h6 mr-6 text-primary-900">
+                Sign In
               </Link>
-            </Tooltip>
-
-            <ProfileMenu user={user} />
+              <Link
+                to={"/signUp"}
+                className="h6 mr-6 rounded bg-primary-600 p-2 text-white"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex w-full items-center justify-between space-x-4 p-4">
+          <MdKeyboardBackspace
+            className="h-7 w-7 cursor-pointer"
+            onClick={() => setIsSearch(false)}
+          />
+          <div className="flex w-full items-center rounded-md bg-primary-50">
+            <input
+              placeholder="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              type="text"
+              className="placeholder:h6 h6 w-full rounded-md border-none bg-inherit placeholder:text-gray focus:ring-0 focus:ring-offset-0"
+            />
+            <MdSearch className="mr-4 h-7 w-7 text-gray" />
           </div>
-        ) : (
-          <div className="flex items-center">
-            <Link to={"/signIn"} className="h6 mr-6 text-primary-900">
-              Sign In
-            </Link>
-            <Link
-              to={"/signUp"}
-              className="h6 mr-6 rounded bg-primary-600 p-2 text-white"
-            >
-              Sign Up
-            </Link>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
