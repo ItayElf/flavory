@@ -63,7 +63,13 @@ export default function Feed() {
     }
     try {
       const res = await safeQuery(client, feedQuery, posts ?? []);
-      setPosts([...(posts ?? []), ...res.data.feed]);
+      const newPosts = [...(posts ?? [])];
+      res.data.explore.forEach((p) => {
+        if (!newPosts.some((p2) => p2.idx === p.idx)) {
+          newPosts.push(p);
+        }
+      });
+      setPosts(newPosts);
     } catch (e) {
       if (e + "" === "Error: No more posts") {
         setFinished(true);

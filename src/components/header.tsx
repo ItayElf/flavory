@@ -52,7 +52,9 @@ export function Header({ contentStyle, user }: Props) {
                 />
               </Tooltip>
               <Tooltip title="Explore">
-                <MdOutlineExplore className="mr-6 h-7 w-7" />
+                <Link to={"/explore"}>
+                  <MdOutlineExplore className="mr-6 h-7 w-7" />
+                </Link>
               </Tooltip>
               <Tooltip title="Create Post">
                 <Link to={"/recipe/post"}>

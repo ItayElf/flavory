@@ -16,6 +16,7 @@ const RecipeEdit = React.lazy(() => import("./pages/recipeEdit"));
 const RecipeCreate = React.lazy(() => import("./pages/recipeCreate"));
 const Profile = React.lazy(() => import("./pages/profile"));
 const ProfileEdit = React.lazy(() => import("./pages/profileEdit"));
+const Explore = React.lazy(() => import("./pages/explore"));
 
 const client = new ApolloClient({
   uri: apiUrl + "graphql",
@@ -44,6 +45,7 @@ ReactDOM.render(
             <Route path="/recipe/post" element={<RecipeCreate />} />
             <Route path="/user/:name" element={<Profile />} />
             <Route path="/user/edit" element={<ProfileEdit />} />
+            <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound className="h-screen" />} />
           </Routes>
         </Suspense>
