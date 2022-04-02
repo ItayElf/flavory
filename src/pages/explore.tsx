@@ -5,12 +5,18 @@ import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { PostPreview } from "../interfaces/post";
+import { safeQuery } from "../utils/fetchUtils";
 
 const pageSize = 5;
 
-const explore = (seed: number, items: number, offset: number) => gql`
+const explore = (
+  token: string,
+  seed: number,
+  items: number,
+  offset: number
+) => gql`
 {
-    explore(seed: ${seed}, items: ${items}, offset: ${offset}) {
+    explore(token: "${token}", seed: ${seed}, items: ${items}, offset: ${offset}) {
         poster
         recipe {
             title
@@ -45,9 +51,14 @@ export default function Explore() {
       return;
     }
     try {
-      const res = await client.query({
-        query: explore(seed, pageSize, posts?.length ?? 0),
-      });
+      const res = await safeQuery(
+        client,
+        explore,
+        seed,
+        pageSize,
+        posts?.length ?? 0
+      );
+
       const newPosts = [...(posts ?? [])];
       res.data.explore.forEach((p) => {
         if (!newPosts.some((p2) => p2.idx === p.idx)) {
@@ -58,6 +69,9 @@ export default function Explore() {
     } catch (e) {
       if (e + "" === "Error: No more posts") {
         setFinished(true);
+        if (!posts) {
+          setPosts([]);
+        }
       } else {
         throw e;
       }

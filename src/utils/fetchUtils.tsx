@@ -13,8 +13,8 @@ const loadAccessToken = async (client: ApolloClient<object>) => {
   `;
   const refreshToken = localStorage.getItem("refreshToken") ?? "";
   const res = await client.mutate({ mutation: refresh(refreshToken) });
-  globals.accessToken = res.data.newToken;
-  return res.data.newToken;
+  globals.accessToken = res.data.refresh.newToken;
+  return res.data.refresh.newToken;
 };
 
 export const safeQuery = async (
@@ -26,7 +26,10 @@ export const safeQuery = async (
     args = args.map((a) => (typeof a === "string" ? escape(a) : a));
     return await client.query({ query: query(globals.accessToken, ...args) });
   } catch (e) {
-    if (e + "" === "Error: Signature has expired") {
+    if (
+      (e + "").includes("Error: Signature has expired") ||
+      (e + "").includes("Error: Not enough segments")
+    ) {
       const token = await loadAccessToken(client);
       return await client.query({ query: query(token, ...args) });
     } else {

@@ -10,6 +10,7 @@ import { safeMutation, safeQuery } from "../utils/fetchUtils";
 import PostModal from "../components/modals/postModal";
 import { Link } from "react-router-dom";
 import useTitle from "../hooks/useTitle";
+import { ButtonPrimary } from "../components/buttonPrimary";
 
 const pageSize = 20;
 
@@ -64,7 +65,7 @@ export default function Feed() {
     try {
       const res = await safeQuery(client, feedQuery, posts ?? []);
       const newPosts = [...(posts ?? [])];
-      res.data.explore.forEach((p) => {
+      res.data.feed.forEach((p) => {
         if (!newPosts.some((p2) => p2.idx === p.idx)) {
           newPosts.push(p);
         }
@@ -73,6 +74,9 @@ export default function Feed() {
     } catch (e) {
       if (e + "" === "Error: No more posts") {
         setFinished(true);
+        if (!posts) {
+          setPosts([]);
+        }
       } else {
         throw e;
       }
@@ -120,18 +124,32 @@ export default function Feed() {
     <>
       <Header user={user} contentStyle="lg:w-[998px] sm:w-[640px] w-full" />
       <div className="mt-24 flex w-full flex-row space-x-8 sm:mx-auto sm:w-[640px] lg:w-[998px]">
-        {posts ? (
+        {posts != null ? (
           <>
-            <div className="mb-9 w-full snap-y space-y-8 sm:w-[640px] sm:snap-none">
-              {posts.map((p) => (
-                <PostCard
-                  key={p.idx}
-                  post={p}
-                  currentUser={user}
-                  setModalPost={(post) => setModalPost(post)}
-                />
-              ))}
-            </div>
+            {posts.length !== 0 ? (
+              <div className="mb-9 w-full snap-y space-y-8 sm:w-[640px] sm:snap-none">
+                {posts.map((p) => (
+                  <PostCard
+                    key={p.idx}
+                    post={p}
+                    currentUser={user}
+                    setModalPost={(post) => setModalPost(post)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="w-full shrink-0 space-y-4 sm:w-[640px]">
+                <h1 className="h2 w-full text-primary-900">
+                  Your feed is empty.
+                </h1>
+                <p className="h5 !mb-4">
+                  Follow other users to fill your feed up!
+                </p>
+                <Link to="/explore">
+                  <ButtonPrimary className="h5">Explore</ButtonPrimary>
+                </Link>
+              </div>
+            )}
             <div className=" hidden lg:flex lg:w-full lg:flex-col lg:space-y-4">
               <p className="h4">Suggestions:</p>
               {suggestions?.map((u) => (
