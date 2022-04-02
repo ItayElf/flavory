@@ -29,7 +29,7 @@ const ModalWrapper: React.FC<Props> = ({
       <Dialog
         as="div"
         onClose={() => onClose()}
-        className={`fixed inset-0 flex h-full w-full items-center justify-center overflow-y-auto sm:m-4 ${wrapperClassName}`}
+        className={`fixed inset-0 z-20 flex h-full w-full items-center justify-center overflow-y-auto sm:m-4 ${wrapperClassName}`}
         initialFocus={focus}
       >
         <Dialog.Overlay

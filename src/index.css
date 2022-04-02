@@ -42,7 +42,7 @@ body,
     @apply font-[sora] text-sm tracking-[0.1px];
   }
   .b1 {
-    @apply font-[roboto] tracking-[0.5px];
+    @apply font-[roboto] text-base tracking-[0.5px];
   }
   .b2 {
     @apply font-[roboto] text-sm tracking-[0.25px];

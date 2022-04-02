@@ -22,7 +22,7 @@ export function Header({ contentStyle, user }: Props) {
   const [isSearch, setIsSearch] = useState(false);
 
   return (
-    <div className="fixed top-0 flex h-16 w-full justify-center bg-white shadow-sm shadow-primary-200 print:hidden">
+    <div className="fixed top-0 z-10 flex h-16 w-full justify-center bg-white shadow-sm shadow-primary-200 print:hidden">
       {!isSearch ? (
         <div
           className={`flex h-full flex-row items-center justify-between px-2 sm:justify-evenly lg:justify-between ${contentStyle}`}

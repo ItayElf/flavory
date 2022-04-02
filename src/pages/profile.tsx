@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Header } from "../components/header";
 import { NotFound } from "../components/notFound";
 import { gql, useApolloClient } from "@apollo/client";
@@ -408,7 +408,7 @@ interface Props3 {
 
 function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
   return (
-    <div className="flex justify-between p-4 sm:justify-start sm:space-x-16">
+    <div className="flex justify-between p-4 sm:justify-start sm:space-x-8">
       <img
         src={apiUrl + `images/users/${user.name}`}
         className="h-24 w-24 rounded-full sm:h-36 sm:w-36"
@@ -416,15 +416,17 @@ function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
       />
       <div className="flex flex-col space-y-6">
         <div className="flex space-x-8">
-          <h1 className="h4">{user.name}</h1>
+          <h1 className="h4  max-w-[66%] break-words">{user.name}</h1>
           {following ? (
             <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
               Following
             </ButtonSecondary>
           ) : owner ? (
-            <ButtonSecondary className="h6 px-3 py-1">
-              Edit Profile
-            </ButtonSecondary>
+            <Link to="/user/edit">
+              <ButtonSecondary className="h6 px-3 py-1">
+                Edit Profile
+              </ButtonSecondary>
+            </Link>
           ) : (
             <ButtonPrimary className="h6 px-3 py-1" onClick={onClick}>
               Follow
