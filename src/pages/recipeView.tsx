@@ -21,6 +21,7 @@ import Tooltip from "../components/tooltip";
 import ConvertModal from "../components/modals/convertModal";
 import useTitle from "../hooks/useTitle";
 import ShareModal from "../components/modals/shareModal";
+import { isBrowser } from "react-device-detect";
 
 const recipeQuery = (idx: number) => gql`
 {
@@ -57,6 +58,20 @@ export default function RecipeView() {
 
   const print = () => {
     window.print();
+  };
+
+  const share = async () => {
+    if (isBrowser) {
+      setIsShare(true);
+    } else {
+      try {
+        await navigator.share({
+          url: window.location.href,
+        });
+      } catch (e) {
+        setIsShare(true);
+      }
+    }
   };
 
   useEffect(() => {
@@ -111,7 +126,7 @@ export default function RecipeView() {
           <Tooltip title="Share">
             <MdShare
               className="h-8 w-8 cursor-pointer text-primary-600"
-              onClick={() => setIsShare(true)}
+              onClick={share}
             />
           </Tooltip>
           <Tooltip title="Print">

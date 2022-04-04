@@ -52,10 +52,10 @@ export default function ConvertModal({
       onClose={() => onClose(originals, originalSteps)}
       className="sm:w-[640px] lg:w-[1024px]"
     >
-      <h1 className="h3 mb-6 text-center underline decoration-primary-600">
+      <h1 className="h3 mb-10 text-center underline decoration-primary-600">
         Convert
       </h1>
-      <div className="flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-4 lg:space-y-0">
         <ConvertSection
           title="Volume"
           ings={getConvertable(ings).volume}
@@ -68,32 +68,32 @@ export default function ConvertModal({
           pool={convertableWeight}
           onConvert={onConvert}
         />
-      </div>
-      <div className="mt-6 flex items-center space-x-4">
-        <p className="h6">Convert degrees to:</p>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="cel"
-            className="cursor-pointer rounded transition duration-200 checked:bg-primary-600 hover:checked:bg-primary-400 focus:ring-primary-600 focus:checked:bg-primary-600"
-            checked={degrees === 1}
-            onChange={() => setDegrees(degrees === 1 ? 0 : 1)}
-          />
-          <label htmlFor="cel" className="h6 cursor-pointer">
-            Celsius
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="far"
-            className="cursor-pointer rounded transition duration-200 checked:bg-primary-600 hover:checked:bg-primary-400 focus:ring-primary-600 focus:checked:bg-primary-600"
-            checked={degrees === 2}
-            onChange={() => setDegrees(degrees === 2 ? 0 : 2)}
-          />
-          <label htmlFor="far" className="h6 cursor-pointer">
-            Fahrenheit
-          </label>
+        <div className="w-full space-y-3">
+          <h2 className="h4 text-center font-medium">Degrees</h2>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="cel"
+              className="cursor-pointer rounded transition duration-200 checked:bg-primary-600 hover:checked:bg-primary-400 focus:ring-primary-600 focus:checked:bg-primary-600"
+              checked={degrees === 1}
+              onChange={() => setDegrees(degrees === 1 ? 0 : 1)}
+            />
+            <label htmlFor="cel" className="h6 cursor-pointer">
+              Celsius
+            </label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="far"
+              className="cursor-pointer rounded transition duration-200 checked:bg-primary-600 hover:checked:bg-primary-400 focus:ring-primary-600 focus:checked:bg-primary-600"
+              checked={degrees === 2}
+              onChange={() => setDegrees(degrees === 2 ? 0 : 2)}
+            />
+            <label htmlFor="far" className="h6 cursor-pointer">
+              Fahrenheit
+            </label>
+          </div>
         </div>
       </div>
       <ButtonPrimary
@@ -125,7 +125,7 @@ const ConvertSection: React.FC<Props2> = ({ title, ings, pool, onConvert }) => {
 
   return (
     <div className="w-full">
-      <h2 className="h4 text-center font-medium">{title}</h2>
+      <h2 className="h4 mb-3 text-center font-medium">{title}</h2>
       {ings.length !== 0 ? (
         <>
           <div className="flex items-center space-x-2">
@@ -171,7 +171,7 @@ const ConvertSection: React.FC<Props2> = ({ title, ings, pool, onConvert }) => {
           {checked.some((v) => v) && (
             <div className="mt-6 mr-10 ">
               <select
-                className="h6 w-full"
+                className="h6 w-full rounded"
                 value=""
                 onChange={(e) => convert(e.target.value)}
               >
@@ -189,7 +189,7 @@ const ConvertSection: React.FC<Props2> = ({ title, ings, pool, onConvert }) => {
         </>
       ) : (
         <>
-          <p className="s1 mt-2 text-gray">
+          <p className="s1 mt-2 text-center text-gray lg:text-left">
             There are no ingredients with {title.toLocaleLowerCase()} units.
           </p>
         </>
