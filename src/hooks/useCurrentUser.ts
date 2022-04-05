@@ -27,13 +27,13 @@ export default function useCurrentUser(forceAuth: boolean) {
     const getUser = async () => {
       try {
         await validateAuth(client);
+        const res = await client.query({
+          query: currentUser(globals.accessToken),
+        });
+        setUser(res.data.currentUser);
       } catch (e) {
         forceAuth && navigate("/signIn");
       }
-      const res = await client.query({
-        query: currentUser(globals.accessToken),
-      });
-      setUser(res.data.currentUser);
     };
     async function getCurrentUser() {
       try {

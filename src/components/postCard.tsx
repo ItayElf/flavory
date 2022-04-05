@@ -42,6 +42,14 @@ mutation {
 }
 `;
 
+const deleteMutation = (token: string, postId: number) => gql`
+mutation {
+  deletePost(token: "${token}", post: ${postId}) {
+    success
+  }
+}
+`;
+
 export default function PostCard({
   post,
   currentUser,
@@ -58,7 +66,13 @@ export default function PostCard({
     post.cooked.indexOf(currentUser.name) !== -1
   );
   const [isOptions, setIsOptions] = useState(false);
+  const navigate = useNavigate();
   const func = setModalPost ? setModalPost : () => {};
+
+  const deletePost = async () => {
+    await safeMutation(client, deleteMutation, post.idx);
+    window.location.reload();
+  };
 
   const likes = () =>
     post.likes.length -
@@ -87,8 +101,6 @@ export default function PostCard({
       onCook(!cooked);
     }
   };
-
-  const navigate = useNavigate();
 
   return (
     <div
@@ -160,7 +172,7 @@ export default function PostCard({
               />
             ) : (
               <MdFavoriteBorder
-                className="h-11 w-11 text-error"
+                className="h-11 w-11 cursor-pointer text-error"
                 onClick={() => toggleLike(liked)}
               />
             )}
@@ -187,6 +199,14 @@ export default function PostCard({
         </p>
       </div>
       <OptionsModal isOpen={isOptions} onClose={() => setIsOptions(false)}>
+        {post.poster === currentUser.name && (
+          <div
+            className="h6 sm:h5 cursor-pointer p-1 text-error"
+            onClick={deletePost}
+          >
+            Delete Post
+          </div>
+        )}
         <div
           className="h6 sm:h5 cursor-pointer p-1"
           onClick={() =>
