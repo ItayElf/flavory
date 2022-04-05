@@ -1,7 +1,7 @@
 import { apiUrl } from "../constants";
 import { PostPreview } from "../interfaces/post";
 import { gql, useApolloClient } from "@apollo/client";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   MdMoreVert,
   MdFavoriteBorder,
@@ -16,6 +16,7 @@ import { useState } from "react";
 import Hashids from "hashids";
 import { timeAsHours, timeSince } from "../utils/formatUtils";
 import { safeMutation } from "../utils/fetchUtils";
+import OptionsModal from "./modals/optionsModal";
 
 interface Props {
   post: PostPreview;
@@ -56,6 +57,7 @@ export default function PostCard({
   const [cooked, setCooked] = useState(
     post.cooked.indexOf(currentUser.name) !== -1
   );
+  const [isOptions, setIsOptions] = useState(false);
   const func = setModalPost ? setModalPost : () => {};
 
   const likes = () =>
@@ -86,6 +88,8 @@ export default function PostCard({
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <div
       className={`w-full shadow-sm shadow-primary-200 sm:w-[640px] ${className}`}
@@ -106,7 +110,10 @@ export default function PostCard({
             <p className="caption text-gray">{timeSince(post.timestamp)}</p>
           </div>
         </div>
-        <MdMoreVert className="h-7 w-7" />
+        <MdMoreVert
+          className="h-7 w-7 cursor-pointer"
+          onClick={() => setIsOptions(true)}
+        />
       </div>
       <div className="h-px w-full bg-primary-50"></div>
       <div
@@ -179,6 +186,30 @@ export default function PostCard({
           Liked by {likes()} people and cooked by {cookes()} people
         </p>
       </div>
+      <OptionsModal isOpen={isOptions} onClose={() => setIsOptions(false)}>
+        <div
+          className="h6 sm:h5 cursor-pointer p-1"
+          onClick={() =>
+            navigate(`/recipe/${new Hashids().encode(post.recipe.idx)}`)
+          }
+        >
+          View Recipe
+        </div>
+        <div
+          className="h6 sm:h5 cursor-pointer p-1"
+          onClick={() => {
+            navigate(`/user/${post.poster}`);
+          }}
+        >
+          View Profile
+        </div>
+        <div
+          className="h6 sm:h5 cursor-pointer p-1"
+          onClick={() => setIsOptions(false)}
+        >
+          Cancel
+        </div>
+      </OptionsModal>
     </div>
   );
 }

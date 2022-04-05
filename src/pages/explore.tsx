@@ -4,6 +4,7 @@ import { Header } from "../components/header";
 import Loading from "../components/loading";
 import PostCard from "../components/postCard";
 import useCurrentUser from "../hooks/useCurrentUser";
+import useTitle from "../hooks/useTitle";
 import { PostPreview } from "../interfaces/post";
 import { safeQuery } from "../utils/fetchUtils";
 
@@ -45,6 +46,8 @@ export default function Explore() {
   const client = useApolloClient();
   const seed = Math.floor(Math.random() * 2147483647);
   const isLg = window.innerWidth >= 1308;
+
+  useTitle("Explore");
 
   const getExplore = useCallback(async () => {
     if (finished) {
