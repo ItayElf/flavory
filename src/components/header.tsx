@@ -6,6 +6,7 @@ import {
   MdPerson,
   MdKeyboardBackspace,
 } from "react-icons/md";
+import { ReactComponent as Logo } from "../imgs/Logo.svg";
 import { Link } from "react-router-dom";
 import { apiUrl } from "../constants";
 import { Menu, Transition } from "@headlessui/react";
@@ -27,7 +28,8 @@ export function Header({ contentStyle, user }: Props) {
         <div
           className={`flex h-full flex-row items-center justify-between px-2 sm:justify-evenly lg:justify-between ${contentStyle}`}
         >
-          <Link to={"/feed"} className="h4">
+          <Link to={"/feed"} className="h5 sm:h4 flex items-center">
+            <Logo className="mr-2 h-12 w-12" />
             Flavory
           </Link>
           <div className="hidden items-center rounded-md bg-primary-50 sm:flex sm:w-72 sm:justify-between lg:w-96">
