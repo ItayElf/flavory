@@ -8,7 +8,7 @@ import useTitle from "../hooks/useTitle";
 import { PostPreview } from "../interfaces/post";
 import { safeQuery } from "../utils/fetchUtils";
 
-const pageSize = 5;
+const pageSize = 20;
 
 const explore = (
   token: string,
@@ -111,7 +111,7 @@ export default function Explore() {
     <>
       <Header
         user={currentUser}
-        contentStyle="w-full sm:w-[858px] lg:w-[1296px]"
+        contentStyle="w-full sm:w-[858px] 2lg:w-[1296px]"
       />
       {isLg ? (
         <div className="mx-auto mt-24 flex max-w-[1296px] space-x-4">

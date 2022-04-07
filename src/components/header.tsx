@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { FormEvent, Fragment, useState } from "react";
 import {
   MdSearch,
   MdOutlineExplore,
@@ -7,7 +7,7 @@ import {
   MdKeyboardBackspace,
 } from "react-icons/md";
 import { ReactComponent as Logo } from "../imgs/Logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiUrl } from "../constants";
 import { Menu, Transition } from "@headlessui/react";
 import User from "../interfaces/user";
@@ -21,18 +21,29 @@ interface Props {
 export function Header({ contentStyle, user }: Props) {
   const [search, setSearch] = useState("");
   const [isSearch, setIsSearch] = useState(false);
+  const navigate = useNavigate();
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (search) {
+      navigate(`/search?query=${search}`);
+    }
+  };
 
   return (
     <div className="fixed top-0 z-10 flex h-16 w-full justify-center bg-white shadow-sm shadow-primary-200 print:hidden">
       {!isSearch ? (
         <div
-          className={`flex h-full flex-row items-center justify-between px-2 sm:justify-evenly lg:justify-between ${contentStyle}`}
+          className={`flex h-full flex-row items-center justify-between px-2 ${contentStyle}`}
         >
-          <Link to={"/feed"} className="h5 sm:h4 flex items-center">
+          <Link to={"/feed"} className="h5 lg:h4 flex items-center">
             <Logo className="mr-2 h-12 w-12" />
             Flavory
           </Link>
-          <div className="hidden items-center rounded-md bg-primary-50 sm:flex sm:w-72 sm:justify-between lg:w-96">
+          <form
+            className="hidden items-center rounded-md bg-primary-50 sm:flex sm:w-72 sm:justify-between lg:w-96"
+            onSubmit={submit}
+          >
             <input
               placeholder="Search"
               value={search}
@@ -41,7 +52,7 @@ export function Header({ contentStyle, user }: Props) {
               className="placeholder:h6 h6 w-full rounded-md border-none bg-inherit placeholder:text-gray focus:ring-0 focus:ring-offset-0"
             />
             <MdSearch className="mr-4 h-7 w-7 text-gray" />
-          </div>
+          </form>
           {user ? (
             <div className="flex items-center">
               <Tooltip title="Search">
