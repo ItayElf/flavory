@@ -12,7 +12,8 @@ import useUrlQuery from "../hooks/useUrlQuery";
 import { PostPreview } from "../interfaces/post";
 import User from "../interfaces/user";
 
-const pageSize = 20;
+const postsPageSize = 20;
+const usersPageSize = 50;
 
 const searchUsers = (query: string, items: number, offset: number) => gql`
 {
@@ -68,9 +69,9 @@ export default function Search() {
     }
     try {
       const res = await client.query({
-        query: searchPosts(queryString, pageSize, posts?.length ?? 0),
+        query: searchPosts(queryString, postsPageSize, posts?.length ?? 0),
       });
-      setPosts(res.data.postsSearch);
+      setPosts([...(posts ?? []), ...res.data.postsSearch]);
     } catch (e) {
       if (e + "" === "Error: No more posts") {
         finished[0] = true;
@@ -90,9 +91,9 @@ export default function Search() {
     }
     try {
       const res = await client.query({
-        query: searchUsers(queryString, pageSize, users?.length ?? 0),
+        query: searchUsers(queryString, usersPageSize, users?.length ?? 0),
       });
-      setUsers(res.data.usersSearch);
+      setUsers([...(users ?? []), ...res.data.usersSearch]);
     } catch (e) {
       if (e + "" === "Error: No more users") {
         finished[1] = true;
@@ -166,7 +167,7 @@ export default function Search() {
             )}
           </Tab>
         </Tab.List>
-        <Tab.Panels className="mx-auto w-full sm:w-[640px]">
+        <Tab.Panels className="mx-auto mb-6 w-full sm:w-[640px]">
           <PostPanel
             posts={posts}
             query={queryString}

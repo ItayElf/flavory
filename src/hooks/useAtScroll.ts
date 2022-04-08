@@ -10,7 +10,7 @@ export default function useAtScroll(
         window.innerHeight + window.scrollY >=
         document.body.offsetHeight - 10
       ) {
-        await func;
+        await func();
         window.removeEventListener("scroll", scrollingFunction);
       }
     };
