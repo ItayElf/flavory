@@ -59,14 +59,14 @@ export default function PostModal({ post, onClose }: Props) {
       className="h-full w-screen sm:m-auto sm:h-2/3 sm:w-[480px]"
     >
       <div className="flex h-full flex-col">
-        <div className="h5 sm:h4 flex h-16 w-full items-center bg-white pl-2 shadow shadow-primary-50">
+        <div className="h5 sm:h4 flex h-16 w-full items-center bg-white pl-2">
           <MdKeyboardBackspace
             className="mr-2 h-8 w-8 cursor-pointer sm:hidden"
             onClick={onClose}
           />
           <h1>Comments</h1>
         </div>
-        <div className="h-full w-full space-y-4 overflow-y-auto bg-[#fafafa] p-4">
+        <div className="h-full w-full space-y-4 overflow-y-auto py-4">
           {shownComments.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center">
               <MdOutlineComment className="h-16 w-16" />
@@ -82,7 +82,7 @@ export default function PostModal({ post, onClose }: Props) {
           )}
         </div>
         <form
-          className="flex h-20 w-full justify-between space-x-2 bg-white py-2 px-4"
+          className="flex h-20 w-full justify-between space-x-2 bg-white p-2"
           onSubmit={submit}
         >
           <input

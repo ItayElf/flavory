@@ -11,8 +11,9 @@ import PostModal from "../components/modals/postModal";
 import { Link } from "react-router-dom";
 import useTitle from "../hooks/useTitle";
 import { ButtonPrimary } from "../components/buttonPrimary";
+import useAtScroll from "../hooks/useAtScroll";
 
-const pageSize = 20;
+const pageSize = 2;
 
 interface Suggested {
   followedBy: string;
@@ -94,23 +95,7 @@ export default function Feed() {
     }
   }, [getNewFeed, user, posts, client]);
 
-  useEffect(() => {
-    const scrolling_function = async () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 10
-      ) {
-        await getNewFeed();
-        window.removeEventListener("scroll", scrolling_function);
-      }
-    };
-    if (!finished) {
-      window.addEventListener("scroll", scrolling_function);
-    }
-    return () => {
-      window.removeEventListener("scroll", scrolling_function);
-    };
-  }, [getNewFeed, finished]);
+  useAtScroll(getNewFeed, finished);
 
   if (!user) {
     return (

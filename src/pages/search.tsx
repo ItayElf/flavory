@@ -4,6 +4,7 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/header";
 import Loading from "../components/loading";
+import PostModal from "../components/modals/postModal";
 import PostCard from "../components/postCard";
 import { apiUrl } from "../constants";
 import useAtScroll from "../hooks/useAtScroll";
@@ -191,6 +192,8 @@ interface PostsProps {
 }
 
 const PostPanel = ({ posts, query, currentUser }: PostsProps) => {
+  const [modalPost, setModalPost] = useState<PostPreview | null>(null);
+
   if (!posts) {
     return (
       <Tab.Panel>
@@ -210,8 +213,14 @@ const PostPanel = ({ posts, query, currentUser }: PostsProps) => {
   return (
     <Tab.Panel className="mt-4 space-y-8">
       {posts.map((p, i) => (
-        <PostCard key={i} post={p} currentUser={currentUser} />
+        <PostCard
+          key={i}
+          post={p}
+          currentUser={currentUser}
+          setModalPost={(post) => setModalPost(post)}
+        />
       ))}
+      <PostModal onClose={() => setModalPost(null)} post={modalPost} />
     </Tab.Panel>
   );
 };

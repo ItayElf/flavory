@@ -2,7 +2,9 @@ import { gql, useApolloClient } from "@apollo/client";
 import { useCallback, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import Loading from "../components/loading";
+import PostModal from "../components/modals/postModal";
 import PostCard from "../components/postCard";
+import useAtScroll from "../hooks/useAtScroll";
 import useCurrentUser from "../hooks/useCurrentUser";
 import useTitle from "../hooks/useTitle";
 import { PostPreview } from "../interfaces/post";
@@ -41,6 +43,7 @@ const explore = (
 
 export default function Explore() {
   const [posts, setPosts] = useState<PostPreview[] | null>(null);
+  const [modalPost, setModalPost] = useState<PostPreview | null>(null);
   const [finished, setFinished] = useState(false);
   const currentUser = useCurrentUser(true);
   const client = useApolloClient();
@@ -85,23 +88,7 @@ export default function Explore() {
     if (posts === null) getExplore();
   }, [getExplore, posts]);
 
-  useEffect(() => {
-    const scrolling_function = async () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 10
-      ) {
-        await getExplore();
-        window.removeEventListener("scroll", scrolling_function);
-      }
-    };
-    if (!finished) {
-      window.addEventListener("scroll", scrolling_function);
-    }
-    return () => {
-      window.removeEventListener("scroll", scrolling_function);
-    };
-  }, [getExplore, finished]);
+  useAtScroll(getExplore, finished);
 
   if (posts === null || currentUser === undefined) {
     return <Loading className="h-screen" />;
@@ -119,14 +106,24 @@ export default function Explore() {
             {posts
               .filter((_, i) => i % 2 === 0)
               .map((p, i) => (
-                <PostCard post={p} currentUser={currentUser} key={i} />
+                <PostCard
+                  post={p}
+                  currentUser={currentUser}
+                  key={i}
+                  setModalPost={(post) => setModalPost(post)}
+                />
               ))}
           </div>
           <div className="mb-4 flex max-w-[640px] flex-col space-y-4">
             {posts
               .filter((_, i) => i % 2 !== 0)
               .map((p, i) => (
-                <PostCard post={p} currentUser={currentUser} key={i} />
+                <PostCard
+                  post={p}
+                  currentUser={currentUser}
+                  key={i}
+                  setModalPost={(post) => setModalPost(post)}
+                />
               ))}
           </div>
         </div>
@@ -134,11 +131,17 @@ export default function Explore() {
         <>
           <div className="mx-auto mt-24 mb-4 flex max-w-[640px] flex-col space-y-8">
             {posts.map((p, i) => (
-              <PostCard post={p} currentUser={currentUser} key={i} />
+              <PostCard
+                post={p}
+                currentUser={currentUser}
+                key={i}
+                setModalPost={(post) => setModalPost(post)}
+              />
             ))}
           </div>
         </>
       )}
+      <PostModal onClose={() => setModalPost(null)} post={modalPost} />
     </>
   );
 }
