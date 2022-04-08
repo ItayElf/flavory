@@ -139,10 +139,10 @@ export default function Search() {
 
   return (
     <>
-      <Header user={currentUser} contentStyle="w-full" />
+      <Header user={currentUser} contentStyle="w-full sm:w-[858px]" />
       <div className="mt-24" />
       <Tab.Group selectedIndex={tab} onChange={changeTab}>
-        <Tab.List className="h6 mx-auto flex w-[640px] justify-center space-x-8 rounded-xl bg-primary-200 p-1 px-4">
+        <Tab.List className="h6 mx-auto flex w-full justify-center space-x-8 rounded-xl bg-primary-200 p-1 px-4 sm:w-[640px]">
           <Tab as={Fragment}>
             {({ selected }) => (
               <button
@@ -166,7 +166,7 @@ export default function Search() {
             )}
           </Tab>
         </Tab.List>
-        <Tab.Panels className="mx-auto w-[640px]">
+        <Tab.Panels className="mx-auto w-full sm:w-[640px]">
           <PostPanel
             posts={posts}
             query={queryString}
@@ -249,14 +249,14 @@ const UsersPanel = ({ users, query, currentUser }: UsersProps) => {
               <img
                 src={apiUrl + `images/users/${u.name}`}
                 alt={`${u.name}'s profile`}
-                className="h-16 w-16 rounded-full"
+                className="h-12 w-12 rounded-full sm:h-16 sm:w-16"
               />
             </Link>
             <Link to={`/user/${u.name}`}>
-              <p className="h4">{u.name}</p>
+              <p className="h5 sm:h4">{u.name}</p>
             </Link>
           </div>
-          <Link to={`/user/${u.name}`} className="h5 text-primary-900">
+          <Link to={`/user/${u.name}`} className="h6 sm:h5 text-primary-900">
             View Profile
           </Link>
         </div>

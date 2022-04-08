@@ -96,7 +96,10 @@ export function Header({ contentStyle, user }: Props) {
             className="h-7 w-7 cursor-pointer"
             onClick={() => setIsSearch(false)}
           />
-          <div className="flex w-full items-center rounded-md bg-primary-50">
+          <form
+            className="flex w-full items-center rounded-md bg-primary-50"
+            onSubmit={submit}
+          >
             <input
               placeholder="Search"
               value={search}
@@ -105,7 +108,7 @@ export function Header({ contentStyle, user }: Props) {
               className="placeholder:h6 h6 w-full rounded-md border-none bg-inherit placeholder:text-gray focus:ring-0 focus:ring-offset-0"
             />
             <MdSearch className="mr-4 h-7 w-7 text-gray" />
-          </div>
+          </form>
         </div>
       )}
     </div>
