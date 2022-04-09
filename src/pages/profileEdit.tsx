@@ -9,6 +9,7 @@ import { apiUrl } from "../constants";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { safeMutation } from "../utils/fetchUtils";
 import { blobToBase64 } from "../utils/formatUtils";
+import { escape } from "../utils/fetchUtils";
 
 const editUser = (
   token: string,
@@ -22,7 +23,7 @@ mutation {
         token: "${token}",
         name: "${name}",
         bio: "${bio}",
-        ${image !== null ? 'image: "' + image + '"' : ""}
+        ${image !== null ? 'image: "' + escape(image) + '"' : ""}
         link: "${link}"
         ) {
             success
@@ -51,12 +52,31 @@ export default function ProfileEdit() {
       return;
     }
     const text = fileInput.current.files[0];
-    setImage((await blobToBase64(text)) as string);
+    const fileBase64 = await blobToBase64(text);
+    console.log(fileBase64 + "");
+    setImage(fileBase64 + "");
+  };
+
+  const getImage = () => {
+    if (image) {
+      return image.split(",")[1];
+    } else if (image === null) {
+      return image;
+    } else {
+      return "";
+    }
   };
 
   const save = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await safeMutation(client, editUser, name, bio, link, image);
+    const res = await safeMutation(
+      client,
+      editUser,
+      name,
+      bio,
+      link,
+      getImage()
+    );
     if (!res.data.editUser.success) {
       alert("Name is already taken.");
       return;
@@ -87,12 +107,12 @@ export default function ProfileEdit() {
                 src={
                   image ? image : apiUrl + `images/users/${currentUser.name}`
                 }
-                className="peer rounded-full"
+                className="peer aspect-square h-full w-full rounded-full"
                 alt={`${currentUser.name}'s profile`}
               />
               <button
                 onClick={() => fileInput.current?.click()}
-                className="absolute inset-0 hidden items-center justify-center rounded-full bg-black/75 text-white hover:flex peer-hover:flex"
+                className="absolute inset-0 hidden aspect-square h-full w-full items-center justify-center rounded-full bg-black/75 text-white hover:flex peer-hover:flex"
               >
                 Change Image
                 <input
