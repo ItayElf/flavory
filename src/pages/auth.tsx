@@ -1,11 +1,12 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ButtonPrimary } from "../components/buttonPrimary";
 import { TextField } from "../components/textField";
 import { Link } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
 import globals from "../globals";
 import useTitle from "../hooks/useTitle";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 interface Props {
   signIn: boolean;
@@ -35,6 +36,7 @@ export default function Auth({ signIn }: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const client = useApolloClient();
+  const user = useCurrentUser(false);
   const navigate = useNavigate();
 
   useTitle("Flavory - " + signIn ? "Sign In" : "Sign Up");
@@ -63,6 +65,10 @@ export default function Auth({ signIn }: Props) {
       return;
     }
   };
+
+  if (user) {
+    return <Navigate to="/feed" />;
+  }
 
   return (
     <div className="flex h-screen items-center justify-center">
