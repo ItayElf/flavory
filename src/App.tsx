@@ -70,9 +70,9 @@ function App() {
         </div>
         <div className="mb-8">
           <div className="mx-auto flex max-w-[856px] flex-col items-center px-4 lg:max-w-[1000px]">
-            <h2 className="h4 mb-4 w-full rounded bg-primary-100 p-4">
+            <h2 className="h5 sm:h4 mb-4 w-full rounded bg-primary-100 p-4">
               Create and Edit Recipes{" "}
-              <span className="h6 text-gray">
+              <span className="s1 sm:h6 text-gray">
                 Share your knowledge with the world
               </span>
             </h2>
