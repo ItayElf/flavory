@@ -28,7 +28,7 @@ function App() {
               </Link>
             </div>
             <div className="w-full">
-              <img src={mockup} className="w-full" alt="mockup" />
+              <img src={mockup} className="w-full" alt="Mockup" />
             </div>
           </div>
         </div>
