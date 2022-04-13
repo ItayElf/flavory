@@ -94,7 +94,7 @@ const getFraction = (top: number, bottom: number, unit: number) => {
   };
   const value = remainder[`${top}/${bottom}`];
   if (value) {
-    return `${unit} ${value}`;
+    return unit ? `${unit} ${value}` : value + "";
   }
   return (unit + top / bottom).toString();
 };
