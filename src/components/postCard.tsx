@@ -10,6 +10,7 @@ import {
   MdLunchDining,
   MdOutlineComment,
   MdOutlineBook,
+  MdVerified,
 } from "react-icons/md";
 import User from "../interfaces/user";
 import { useState } from "react";
@@ -69,6 +70,8 @@ export default function PostCard({
   const navigate = useNavigate();
   const func = setModalPost ? setModalPost : () => {};
 
+  const verified = post.poster === "Flavory Team";
+
   const deletePost = async () => {
     await safeMutation(client, deleteMutation, post.idx);
     window.location.reload();
@@ -117,7 +120,12 @@ export default function PostCard({
           </Link>
           <div className="ml-4 flex h-full flex-col justify-between">
             <Link to={`/user/${post.poster}`}>
-              <p className="h6">{post.poster}</p>
+              <p className="h6">
+                {post.poster}
+                {verified && (
+                  <MdVerified className="ml-2 inline-block text-primary-600" />
+                )}
+              </p>
             </Link>
             <p className="caption text-gray">{timeSince(post.timestamp)}</p>
           </div>

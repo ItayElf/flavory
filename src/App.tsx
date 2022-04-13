@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import "./App.css";
 import { ButtonPrimary } from "./components/buttonPrimary";
 import { Header } from "./components/header";
 import useCurrentUser from "./hooks/useCurrentUser";
-
-const mockup = require("./imgs/mockup.png");
-const cookingRecipe = require("./imgs/cookingRecipe.jpg");
-const desktopScreenshot = require("./imgs/desktopScreenshot.jpg");
+import mockup from "./imgs/mockup.png";
+import cookingRecipe from "./imgs/cookingRecipe.jpg";
+import desktopScreenshot from "./imgs/desktopScreenshot.jpg";
 
 function App() {
   const currentUser = useCurrentUser(false);

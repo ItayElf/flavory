@@ -16,6 +16,7 @@ import PostModal from "../components/modals/postModal";
 import { safeMutation } from "../utils/fetchUtils";
 import { FollowersModal } from "../components/modals/followersModal";
 import useTitle from "../hooks/useTitle";
+import { MdVerified } from "react-icons/md";
 
 const query = (name: string) => gql`
 {
@@ -407,6 +408,8 @@ interface Props3 {
 }
 
 function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
+  const verified = user.name === "Flavory Team";
+
   return (
     <div className="flex justify-between p-4 sm:justify-start sm:space-x-8">
       <img
@@ -414,9 +417,14 @@ function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
         className="h-24 w-24 rounded-full sm:h-36 sm:w-36"
         alt={`${user.name}'s profile`}
       />
-      <div className="flex flex-col space-y-6">
-        <div className="flex space-x-8">
-          <h1 className="h4  max-w-[66%] break-words">{user.name}</h1>
+      <div className="flex w-full flex-col space-y-6">
+        <div className="flex w-full justify-between">
+          <h1 className="h4 break-words">
+            {user.name}
+            {verified && (
+              <MdVerified className="ml-2 inline-block text-primary-600" />
+            )}
+          </h1>
           {following ? (
             <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
               Following
