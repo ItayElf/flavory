@@ -43,6 +43,10 @@ export default function Auth({ signIn }: Props) {
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (password.length < 8) {
+      setError("Password has to be at least 8 characters.");
+      return;
+    }
     const mutation = signIn
       ? signInMutation(email, password)
       : signUpMutation(email, password, name);
@@ -84,7 +88,7 @@ export default function Auth({ signIn }: Props) {
               label="Name"
               value={name}
               setValue={setName}
-              required={signIn}
+              required={!signIn}
             />
           )}
           <TextField

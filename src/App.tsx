@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { ButtonPrimary } from "./components/buttonPrimary";
 import { Header } from "./components/header";
 import useCurrentUser from "./hooks/useCurrentUser";
-import mockup from "./imgs/mockup.png";
-import cookingRecipe from "./imgs/cookingRecipe.jpg";
-import desktopScreenshot from "./imgs/desktopScreenshot.jpg";
+import mockup from "./imgs/mockup.webp";
+import cookingRecipe from "./imgs/cookingRecipe.webp";
+import desktopScreenshot from "./imgs/desktopScreenshot.webp";
 
 function App() {
   const currentUser = useCurrentUser(false);
