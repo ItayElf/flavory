@@ -1,6 +1,6 @@
 import ModalWrapper from "./modalWrapper";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ButtonSecondary } from "../buttonSecondary";
 import { ButtonPrimary } from "../buttonPrimary";
 import "react-image-crop/dist/ReactCrop.css";
@@ -62,8 +62,16 @@ export default function CropModal({ imgSrc, isOpen, onClose, aspect }: Props) {
   const img = useRef<HTMLImageElement>(null);
 
   const onSave = () => {
-    onClose(canv.current?.toDataURL("image/" + getExt(imgSrc)) ?? null);
+    if (crop) {
+      onClose(canv.current?.toDataURL("image/" + getExt(imgSrc)) ?? null);
+    } else {
+      alert("Please click and drag the cursor over the image to crop it.");
+    }
   };
+
+  useEffect(() => {
+    setCrop(undefined);
+  }, []);
 
   return (
     <ModalWrapper

@@ -44,6 +44,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   const [image, setImage] = useState<string | undefined | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isCrop, setIsCrop] = useState(false);
+  const [fileKey, setFileKey] = useState(Math.random().toString(36));
   const fileInput = useRef<HTMLInputElement>(null);
   const isSm = window.innerWidth <= 640;
 
@@ -74,7 +75,6 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   };
 
   const getImage = () => {
-    //TODO: fix image not uploded when same image is selected
     if (image) {
       return image.split(",")[1];
     } else if (image === null) {
@@ -89,6 +89,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
       return;
     } else if (image) {
       setImage(null);
+      setFileKey(Math.random().toString(36));
     } else {
       fileInput.current.click();
     }
@@ -159,6 +160,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
             ref={fileInput}
             accept="image/*"
             onChange={changeImage}
+            key={fileKey}
           />
           <TextField
             type="text"
