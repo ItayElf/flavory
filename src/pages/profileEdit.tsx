@@ -10,6 +10,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import { safeMutation } from "../utils/fetchUtils";
 import { blobToBase64 } from "../utils/formatUtils";
 import { escape } from "../utils/fetchUtils";
+import CropModal from "../components/modals/cropModal";
 
 const editUser = (
   token: string,
@@ -36,6 +37,8 @@ export default function ProfileEdit() {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [link, setLink] = useState("");
+  const [isCrop, setIsCrop] = useState(false);
+  const [inputKey, setInputKey] = useState(Math.random().toString(36));
   const currentUser = useCurrentUser(true);
   const fileInput = useRef<HTMLInputElement>(null);
   const client = useApolloClient();
@@ -55,6 +58,8 @@ export default function ProfileEdit() {
     const fileBase64 = await blobToBase64(text);
     console.log(fileBase64 + "");
     setImage(fileBase64 + "");
+    setIsCrop(true);
+    setInputKey(Math.random().toString(36));
   };
 
   const getImage = () => {
@@ -121,6 +126,7 @@ export default function ProfileEdit() {
                   className="hidden"
                   accept="image/*"
                   onChange={changeImage}
+                  key={inputKey}
                 />
               </button>
             </div>
@@ -155,6 +161,15 @@ export default function ProfileEdit() {
           </div>
         </div>
       </div>
+      <CropModal
+        isOpen={isCrop}
+        onClose={(b64) => {
+          setIsCrop(false);
+          setImage(b64);
+        }}
+        imgSrc={image ?? ""}
+        aspect={1 / 1}
+      />
     </>
   );
 }

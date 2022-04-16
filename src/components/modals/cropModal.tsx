@@ -71,7 +71,7 @@ export default function CropModal({ imgSrc, isOpen, onClose, aspect }: Props) {
 
   useEffect(() => {
     setCrop(undefined);
-  }, []);
+  }, [imgSrc]);
 
   return (
     <ModalWrapper
