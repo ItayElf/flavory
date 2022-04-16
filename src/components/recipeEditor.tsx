@@ -19,6 +19,7 @@ import {
 } from "react-icons/md";
 import { IngredientsModal } from "./modals/ingredientsModal";
 import { StepsModal } from "./modals/stepsModal";
+import CropModal from "./modals/cropModal";
 
 interface Props {
   recipe?: Recipe;
@@ -42,6 +43,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   const [stepsModalOpen, setStepsModalOpen] = useState(false);
   const [image, setImage] = useState<string | undefined | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCrop, setIsCrop] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const isSm = window.innerWidth <= 640;
 
@@ -72,6 +74,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   };
 
   const getImage = () => {
+    //TODO: fix image not uploded when same image is selected
     if (image) {
       return image.split(",")[1];
     } else if (image === null) {
@@ -98,6 +101,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
     const text = fileInput.current.files[0];
     const fileBase64 = await blobToBase64(text);
     setImage(fileBase64 + "");
+    setIsCrop(true);
   };
 
   useEffect(() => {
@@ -257,6 +261,15 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
           setSteps(s);
           setStepsModalOpen(false);
         }}
+      />
+      <CropModal
+        isOpen={isCrop}
+        onClose={(b64) => {
+          setIsCrop(false);
+          setImage(b64);
+        }}
+        imgSrc={image ?? ""}
+        aspect={16 / 9}
       />
     </>
   );

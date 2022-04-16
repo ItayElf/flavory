@@ -43,7 +43,7 @@ export default function Auth({ signIn }: Props) {
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password.length < 8) {
+    if (password.length < 8 && !signIn) {
       setError("Password has to be at least 8 characters.");
       return;
     }

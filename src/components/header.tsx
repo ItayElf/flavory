@@ -122,7 +122,7 @@ function ProfileMenu({ user }: { user: User }) {
         <Menu.Button>
           <img
             src={apiUrl + `images/users/${user.name}`}
-            className="h-11 w-11 rounded-full ring-2 ring-primary-50"
+            className="h-12 w-12 rounded-full ring-2 ring-primary-50"
             alt={`${user.name}'s profile`}
           />
         </Menu.Button>
