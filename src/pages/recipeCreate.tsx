@@ -4,7 +4,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import { Header } from "../components/header";
 import Recipe from "../interfaces/Recipe";
 import { escape, safeMutation } from "../utils/fetchUtils";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import Loading from "../components/loading";
 import useTitle from "../hooks/useTitle";
 
@@ -32,6 +32,7 @@ mutation {
 `;
 
 export default function RecipeCreate() {
+  const [loading, setLoading] = useState(false);
   const user = useCurrentUser(true);
   const client = useApolloClient();
   const navigate = useNavigate();
@@ -49,9 +50,14 @@ export default function RecipeCreate() {
       alert("please add steps for the recipe");
       return;
     }
+    setLoading(true);
     await safeMutation(client, makePost, recipe, image);
     navigate(`/feed`);
   };
+
+  if (loading) {
+    return <Loading className="h-screen" />;
+  }
 
   return (
     <>

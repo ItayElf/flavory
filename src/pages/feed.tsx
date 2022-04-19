@@ -13,7 +13,7 @@ import useTitle from "../hooks/useTitle";
 import { ButtonPrimary } from "../components/buttonPrimary";
 import useAtScroll from "../hooks/useAtScroll";
 
-const pageSize = 2;
+const pageSize = 20;
 
 interface Suggested {
   followedBy: string;
@@ -59,6 +59,8 @@ export default function Feed() {
   const client = useApolloClient();
   const user = useCurrentUser(true);
 
+  useTitle("Flavory");
+
   const getNewFeed = useCallback(async () => {
     if (finished) {
       return;
@@ -100,7 +102,7 @@ export default function Feed() {
   if (!user) {
     return (
       <>
-        <Loading className="h-full" />
+        <Loading className="h-screen" />
       </>
     );
   }
@@ -180,8 +182,6 @@ function SuggestionTile({ apiUrl, u, client }: Props2) {
     await safeMutation(client, mutation, u.suggested, !followed);
     setfollowed(!followed);
   };
-
-  useTitle("Flavory");
 
   return (
     <div className="flex justify-between">
