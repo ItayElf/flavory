@@ -411,60 +411,87 @@ function ProfileHeader({ following, onClick, owner, user, setModal }: Props3) {
   const verified = user.name === "Flavory Team";
 
   return (
-    <div className="flex justify-between p-4 sm:justify-start sm:space-x-8">
-      <img
-        src={apiUrl + `images/users/${user.name}`}
-        className="h-24 w-24 rounded-full sm:h-36 sm:w-36"
-        alt={`${user.name}'s profile`}
-      />
-      <div className="flex w-full flex-col space-y-6">
-        <div className="flex w-full justify-between">
-          <h1 className="h4 break-words">
-            {user.name}
-            {verified && (
-              <MdVerified className="ml-2 inline-block text-primary-600" />
-            )}
-          </h1>
-          {following ? (
-            <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
-              Following
-            </ButtonSecondary>
-          ) : owner ? (
-            <Link to="/user/edit">
-              <ButtonSecondary className="h6 px-3 py-1">
-                Edit Profile
+    <>
+      <div className="flex justify-between p-4 sm:justify-start sm:space-x-8">
+        <img
+          src={apiUrl + `images/users/${user.name}`}
+          className="mr-4 h-24 w-24 rounded-full sm:m-0 sm:h-36 sm:w-36"
+          alt={`${user.name}'s profile`}
+        />
+        <div className="flex w-full flex-col space-y-6">
+          <div className="flex w-full justify-between">
+            <h1 className="h4 break-words">
+              {user.name}
+              {verified && (
+                <MdVerified className="ml-2 inline-block text-primary-600" />
+              )}
+            </h1>
+            {following ? (
+              <ButtonSecondary className="h6 px-3 py-1" onClick={onClick}>
+                Following
               </ButtonSecondary>
-            </Link>
-          ) : (
-            <ButtonPrimary className="h6 px-3 py-1" onClick={onClick}>
-              Follow
-            </ButtonPrimary>
-          )}
-        </div>
-        <div className="b1 flex w-full space-x-8">
-          <div className="flex flex-col items-center sm:block">
-            <span className="font-bold">{user.posts.length}</span> posts
+            ) : owner ? (
+              <Link to="/user/edit">
+                <ButtonSecondary className="h6 px-3 py-1">
+                  Edit Profile
+                </ButtonSecondary>
+              </Link>
+            ) : (
+              <ButtonPrimary className="h6 px-3 py-1" onClick={onClick}>
+                Follow
+              </ButtonPrimary>
+            )}
           </div>
-          <div
-            className="flex cursor-pointer flex-col items-center sm:block"
-            onClick={() => setModal(1)}
-          >
-            <span className="font-bold">{user.followers.length}</span> followers
-          </div>
-          <div
-            className="flex cursor-pointer flex-col items-center sm:block"
-            onClick={() => setModal(2)}
-          >
-            <span className="font-bold">{user.following.length}</span> following
+          <DataPanel
+            user={user}
+            setModal={setModal}
+            className="hidden sm:flex"
+          />
+          <div className="b1">
+            <p>{user.bio}</p>
+            <a href={user.link} className="font-bold text-primary-600">
+              {user.link}
+            </a>
           </div>
         </div>
-        <div className="b1">
-          <p>{user.bio}</p>
-          <a href={user.link} className="font-bold text-primary-600">
-            {user.link}
-          </a>
-        </div>
+      </div>
+      <div className="flex items-center justify-center">
+        <DataPanel
+          user={user}
+          setModal={setModal}
+          className="justify-center sm:hidden"
+        />
+      </div>
+    </>
+  );
+}
+
+const DataPanel = ({
+  user,
+  setModal,
+  className,
+}: {
+  user: User;
+  setModal: (val: number) => void;
+  className?: string;
+}) => {
+  return (
+    <div className={`h6 sm:s1 flex w-full space-x-8 sm:w-auto ${className}`}>
+      <div className="flex flex-col items-center sm:block">
+        <span className="font-bold">{user.posts.length}</span> posts
+      </div>
+      <div
+        className="flex cursor-pointer flex-col items-center sm:block"
+        onClick={() => setModal(1)}
+      >
+        <span className="font-bold">{user.followers.length}</span> followers
+      </div>
+      <div
+        className="flex cursor-pointer flex-col items-center sm:block"
+        onClick={() => setModal(2)}
+      >
+        <span className="font-bold">{user.following.length}</span> following
       </div>
     </div>
   );
-}
+};

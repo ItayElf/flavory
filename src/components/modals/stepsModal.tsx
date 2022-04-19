@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdCancel, MdKeyboardBackspace } from "react-icons/md";
 import { ButtonPrimary } from "../buttonPrimary";
-import { TextField } from "../textField";
+import { TextArea } from "../textField";
 import ModalWrapper from "./modalWrapper";
 
 interface Props {
@@ -43,8 +43,7 @@ export function StepsModal({ isOpen, onClose, steps: s }: Props) {
                 Step no.{idx + 1}
               </h2>
               <div className="flex items-center space-x-2">
-                <TextField
-                  type="text"
+                <TextArea
                   wrapperClassName="w-full"
                   value={step}
                   setValue={(v) =>

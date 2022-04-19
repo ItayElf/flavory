@@ -6,7 +6,7 @@ import { blobToBase64 } from "../utils/formatUtils";
 import { ButtonPrimary } from "./buttonPrimary";
 import { ButtonSecondary } from "./buttonSecondary";
 import RecipeContent from "./recipeContent";
-import { TextField } from "./textField";
+import { TextArea, TextField } from "./textField";
 import { Transition } from "@headlessui/react";
 import {
   MdMenu,
@@ -162,8 +162,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
             onChange={changeImage}
             key={fileKey}
           />
-          <TextField
-            type="text"
+          <TextArea
             value={description}
             setValue={setDescription}
             label="Description"
@@ -211,7 +210,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
               <span>Edit Steps</span>
             </div>
           </ButtonSecondary>
-          <div className="!mb-16 flex w-full sm:!mt-32">
+          <div className="!mb-16 hidden w-full sm:!mt-32 sm:flex">
             <ButtonSecondary className="h5 mr-3 w-1/2" onClick={onDiscard}>
               Discard
             </ButtonSecondary>

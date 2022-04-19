@@ -149,7 +149,7 @@ export default function PostCard({
           alt={post.recipe.title}
         />
         <p className="h4 sm:h3 w-full text-center">{post.recipe.title}</p>
-        <p className="s1 sm:h6">{post.recipe.description}</p>
+        <p className="s1 sm:h6 line-clamp-2">{post.recipe.description}</p>
         {(post.recipe.cookingTime || post.recipe.servings) && (
           <div className="flex">
             {post.recipe.cookingTime && (
@@ -175,7 +175,7 @@ export default function PostCard({
           <div className="flex items-center space-x-4">
             {liked ? (
               <MdFavorite
-                className="h-11 w-11 text-error"
+                className="h-11 w-11 cursor-pointer text-error"
                 onClick={() => toggleLike(liked)}
               />
             ) : (
