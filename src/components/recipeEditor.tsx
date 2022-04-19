@@ -53,7 +53,7 @@ export default function RecipeEditor({ recipe, onSave, onDiscard }: Props) {
   useEffect(() => {
     if (recipe) {
       getBase64FromUrl(apiUrl + `images/recipes/${recipe.idx}`).then((v) => {
-        setImage(v);
+        setImage(v === "data:" ? null : v);
       });
     }
   }, [recipe]);

@@ -86,6 +86,7 @@ export default function RecipeEdit() {
       alert("please add steps for the recipe");
       return;
     }
+    setRecipe(null);
     await safeMutation(client, editRecipe, recipe, image);
     navigate(`/recipe/${encoded}`);
   };

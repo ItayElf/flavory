@@ -1,6 +1,6 @@
 {
   "name": "flavory",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.10",
