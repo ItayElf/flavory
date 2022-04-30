@@ -40,6 +40,7 @@ const searchPosts = (query: string, items: number, offset: number) => gql`
             commenter
             content
             timestamp
+            idx
         }
         likes
         cooked
@@ -220,7 +221,11 @@ const PostPanel = ({ posts, query, currentUser }: PostsProps) => {
           setModalPost={(post) => setModalPost(post)}
         />
       ))}
-      <PostModal onClose={() => setModalPost(null)} post={modalPost} />
+      <PostModal
+        onClose={() => setModalPost(null)}
+        post={modalPost}
+        currentUser={currentUser}
+      />
     </Tab.Panel>
   );
 };

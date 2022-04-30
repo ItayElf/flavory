@@ -32,6 +32,7 @@ const explore = (
             commenter
             content
             timestamp
+            idx
         }
         likes
         cooked
@@ -141,7 +142,11 @@ export default function Explore() {
           </div>
         </>
       )}
-      <PostModal onClose={() => setModalPost(null)} post={modalPost} />
+      <PostModal
+        onClose={() => setModalPost(null)}
+        post={modalPost}
+        currentUser={currentUser}
+      />
     </>
   );
 }

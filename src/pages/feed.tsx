@@ -35,6 +35,7 @@ const feedQuery = (token: string, posts: PostPreview[]) => gql`
             commenter
             content
             timestamp
+            idx
         }
         likes
         cooked
@@ -151,7 +152,11 @@ export default function Feed() {
                 © 2022 Flavory by Itay Ben Haim
               </p>
             </div>
-            <PostModal onClose={() => setModalPost(null)} post={modalPost} />
+            <PostModal
+              onClose={() => setModalPost(null)}
+              post={modalPost}
+              currentUser={user}
+            />
           </>
         ) : (
           <Loading className="w-full" />

@@ -42,6 +42,7 @@ const query = (name: string) => gql`
           commenter
           content
           timestamp
+          idx
       }
       likes
       cooked
@@ -66,6 +67,7 @@ const getCookedBy = (name: string) => gql`
         commenter
         content
         timestamp
+        idx
     }
     likes
     cooked
@@ -322,7 +324,11 @@ export default function Profile() {
               />
             </Tab.Panels>
           </Tab.Group>
-          <PostModal onClose={() => setModalPost(null)} post={modalPost} />
+          <PostModal
+            onClose={() => setModalPost(null)}
+            post={modalPost}
+            currentUser={currentUser}
+          />
           <FollowersModal
             currentUser={currentUser}
             followers={user.followers}

@@ -1,5 +1,9 @@
 import { PostPreview } from "../../interfaces/post";
-import { MdOutlineComment, MdKeyboardBackspace } from "react-icons/md";
+import {
+  MdOutlineComment,
+  MdKeyboardBackspace,
+  MdDelete,
+} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
 import { FormEvent, useState } from "react";
@@ -8,9 +12,11 @@ import { apiUrl } from "../../constants";
 import { timeSince } from "../../utils/formatUtils";
 import { safeMutation } from "../../utils/fetchUtils";
 import ModalWrapper from "./modalWrapper";
+import User from "../../interfaces/user";
 
 interface Props {
   post: PostPreview | null;
+  currentUser: User;
   onClose: () => void;
 }
 
@@ -21,12 +27,20 @@ mutation {
       commenter
       content
       timestamp
+      idx
     }
   }
 }
 `;
 
-export default function PostModal({ post, onClose }: Props) {
+const deleteCommentMutation = (token: string, commentId: number) => gql`
+mutation {
+  deleteComment(comment: ${commentId}, token: "${token}") {
+    success
+  }
+}`;
+
+export default function PostModal({ post, onClose, currentUser }: Props) {
   const [comment, setComment] = useState("");
   const map = new Map<number, Comment[]>();
   const [sentComments, setSentComments] = useState(map);
@@ -50,6 +64,21 @@ export default function PostModal({ post, onClose }: Props) {
     ]);
     setSentComments(map2);
     setComment("");
+  };
+
+  const onDelete = async (idx: number) => {
+    if (!post) {
+      return;
+    }
+    await safeMutation(client, deleteCommentMutation, idx);
+    const map2 = new Map(sentComments);
+    map2.set(
+      post.idx,
+      (map2.get(post.idx) ?? []).filter((c) => c.idx !== idx)
+    );
+    console.log(map.get(post.idx));
+    console.log(map2.get(post.idx));
+    setSentComments(map2);
   };
 
   return (
@@ -77,7 +106,14 @@ export default function PostModal({ post, onClose }: Props) {
             </div>
           ) : (
             shownComments.map((c, i) => (
-              <CommentTile c={c} post={post!} key={i} onClose={onClose} />
+              <CommentTile
+                c={c}
+                post={post!}
+                key={i}
+                onClose={onClose}
+                currentUser={currentUser}
+                onDelete={onDelete}
+              />
             ))
           )}
         </div>
@@ -102,10 +138,12 @@ export default function PostModal({ post, onClose }: Props) {
 interface Props2 {
   c: Comment;
   post: PostPreview;
+  currentUser: User;
+  onDelete: (idx: number) => void;
   onClose: () => void;
 }
 
-const CommentTile = ({ c, post, onClose }: Props2) => {
+const CommentTile = ({ c, post, onClose, currentUser, onDelete }: Props2) => {
   const navigate = useNavigate();
 
   const gotoUser = () => {
@@ -135,7 +173,15 @@ const CommentTile = ({ c, post, onClose }: Props2) => {
             {c.commenter}
           </span>{" "}
           {c.content}
-          <p className="caption text-gray">{timeSince(c.timestamp)}</p>
+          <div className="flex space-x-4">
+            <p className="caption text-gray">{timeSince(c.timestamp)}</p>
+            {[post.poster, c.commenter].includes(currentUser.name) && (
+              <MdDelete
+                className="h-5 w-5 cursor-pointer text-error"
+                onClick={() => onDelete(c.idx)}
+              />
+            )}
+          </div>
         </div>
       </div>
     </>
