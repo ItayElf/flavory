@@ -12,6 +12,7 @@ interface Props2 {
   value: string;
   setValue: (value: string) => void;
   id?: string;
+  capitalize?: boolean;
 }
 
 export function TextField({
@@ -25,6 +26,7 @@ export function TextField({
   required,
   options,
   id,
+  capitalize = true,
 }: Props) {
   return (
     <div className={`relative flex flex-col ${wrapperClassName}`}>
@@ -37,6 +39,7 @@ export function TextField({
         onChange={(e) => setValue(e.target.value)}
         required={required}
         list={`${id ?? label} list`}
+        autoCapitalize={capitalize ? "on" : "off"}
       />
       <label
         htmlFor={id ?? label}

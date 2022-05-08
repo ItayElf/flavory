@@ -118,6 +118,7 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
         <TextField
           type="text"
           value={units}
+          capitalize={false}
           setValue={(v) => {
             setUnits(v);
             onChange(
@@ -134,6 +135,7 @@ const IngTile = ({ ing, idx, onDelete, onChange }: Props2) => {
           className="w-full"
           type="text"
           value={name}
+          capitalize={false}
           setValue={(v) => {
             setName(v);
             onChange(

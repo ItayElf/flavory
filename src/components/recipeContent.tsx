@@ -37,19 +37,19 @@ export default function RecipeContent({ recipe, image }: Props) {
         {recipe.cookingTime && (
           <div className="flex flex-col items-center justify-center sm:flex-row">
             <MdTimer className="h-8 w-8 sm:mr-2" />
-            <p>{timeAsHours(recipe.cookingTime)}</p>
+            <p className="text-center">{timeAsHours(recipe.cookingTime)}</p>
           </div>
         )}
         {recipe.servings && (
           <div className="flex flex-col items-center pl-2 sm:flex-row">
             <MdRestaurant className="h-8 w-8 sm:mr-2" />
-            <p>{recipe.servings}</p>
+            <p className="text-center">{recipe.servings}</p>
           </div>
         )}
         {recipe.author && (
           <div className="flex flex-col items-center pl-2 sm:flex-row">
             <MdEdit className="h-8 w-8 sm:mr-2" />
-            <p>{recipe.author}</p>
+            <p className="text-center">{recipe.author}</p>
           </div>
         )}
       </div>
